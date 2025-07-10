@@ -2,7 +2,6 @@ import { Op } from 'sequelize';
 import categories from '../models/categories';
 import subCategories from '../models/subCategories';
 
-// ---------- Input Interfaces ----------
 
 interface CreateCategoryInput {
   seller_id: string;
@@ -45,7 +44,6 @@ interface SubCategoryByCategoryIdInput {
   category_id: string;
 }
 
-// ---------- Category Services ----------
 
 const createCategory = async ({
   seller_id,
@@ -74,7 +72,6 @@ const fetchAllCategory = async () => {
   return await categories.findAll();
 };
 
-// ---------- SubCategory Services ----------
 
 const createSubCategory = async ({
   seller_id,
@@ -113,7 +110,6 @@ const getSubCategoryByCategoryId = async ({
   return await subCategories.findAll({ where: { category_id } });
 };
 
-// ---------- Export ----------
 
 export {
   createCategory,

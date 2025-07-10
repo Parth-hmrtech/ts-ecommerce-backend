@@ -3,7 +3,6 @@ import categories from '../models/categories';
 import subCategories from '../models/subCategories';
 import wishlist from '../models/wishlist';
 
-// ------------------ Type Definitions ------------------
 
 interface ProductInput {
   seller_id: string;
@@ -31,7 +30,6 @@ interface WishlistInput {
   product_id: string;
 }
 
-// ------------------ Product Functions ------------------
 
 const createProduct = async ({ seller_id, ...productBody }: ProductInput) => {
   const createdProduct = await product.create({
@@ -115,7 +113,6 @@ const fetchProductById = async (id: string) => {
   });
 };
 
-// ------------------ Wishlist Functions ------------------
 
 const createWishlist = async ({ buyer_id, product_id }: WishlistInput) => {
   const [wishlistItem, created] = await wishlist.findOrCreate({
@@ -139,7 +136,6 @@ const deleteWishlist = async (productId: string) => {
   return deleted > 0;
 };
 
-// ------------------ Exports ------------------
 
 export {
   createProduct,

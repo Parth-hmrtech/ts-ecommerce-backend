@@ -42,7 +42,6 @@ export class User
   public async validPassword(password: string): Promise<boolean> {
     const storedHash = this.getDataValue('password_hash');
     const match = await bcrypt.compare(password, storedHash);
-    // console.log('[Password Compare]', { password, storedHash, match });
     return match;
   }
 }

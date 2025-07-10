@@ -38,7 +38,6 @@ const createCategoryController: RequestHandler = async (req, res) => {
 const getCategoryController: RequestHandler = async (req, res) => {
   try {
     const { user } = req as AuthRequest;
-    console.log("hello");
     
     const categories = await getCategory({ seller_id: user.id });
 

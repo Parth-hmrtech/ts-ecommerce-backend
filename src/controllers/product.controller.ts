@@ -15,14 +15,12 @@ import fs from 'fs/promises';
 import path from 'path';
 import { uploadFile } from '../utils/uploadImage';
 
-// Extend Request type to include user
 interface AuthRequest extends Request {
   user: {
     id: string;
   };
 }
 
-// ---------------------- Controllers ----------------------
 
 export const createProductController = async (req: Request, res: Response) => {
   const authReq = req as AuthRequest;
