@@ -4,13 +4,13 @@ import bcrypt from 'bcrypt';
 
 export interface UserAttributes {
   id: string;
-  first_name?: string;
-  last_name?: string;
+  first_name: string;
+  last_name: string;
   email: string;
   password_hash: string;
   role: 'seller' | 'buyer';
-  phone_number?: string;
-  image_url?: string;
+  phone_number: string;
+  image_url: string;
   is_active: boolean;
   createdAt?: Date;
   updatedAt?: Date;
@@ -19,38 +19,30 @@ export interface UserAttributes {
 
 export type UserCreationAttributes = Optional<
   UserAttributes,
-  | 'id'
-  | 'first_name'
-  | 'last_name'
-  | 'phone_number'
-  | 'image_url'
-  | 'is_active'
-  | 'createdAt'
-  | 'updatedAt'
-  | 'deletedAt'
+  'id' | 'createdAt' | 'updatedAt' | 'deletedAt'
 >;
 
-
-class User extends Model<UserAttributes, UserCreationAttributes>
+export class User extends Model<UserAttributes, UserCreationAttributes>
   implements UserAttributes {
   public id!: string;
-  public first_name?: string;
-  public last_name?: string;
+  public first_name!: string;
+  public last_name!: string;
   public email!: string;
   public password_hash!: string;
   public role!: 'seller' | 'buyer';
-  public phone_number?: string;
-  public image_url?: string;
+  public phone_number!: string;
+  public image_url!: string;
   public is_active!: boolean;
-
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
   public readonly deletedAt!: Date | null;
 
-  public async validPassword(password: string): Promise<boolean> {
-    if (!password || !this.password_hash) return false;
-    return bcrypt.compare(password, this.password_hash);
-  }
+public async validPassword(password: string): Promise<boolean> {
+  const storedHash = this.getDataValue('password_hash');
+  console.log('[Password Compare]', { password, storedHash });
+  return bcrypt.compare(password, storedHash);
+}
+
 }
 
 User.init(
@@ -62,19 +54,16 @@ User.init(
     },
     first_name: {
       type: DataTypes.STRING(100),
-      allowNull: true,
+      allowNull: false,
     },
     last_name: {
       type: DataTypes.STRING(100),
-      allowNull: true,
+      allowNull: false,
     },
     email: {
       type: DataTypes.STRING(255),
       allowNull: false,
-      unique: false,
-      validate: {
-        isEmail: true,
-      },
+      validate: { isEmail: true },
     },
     password_hash: {
       type: DataTypes.STRING(255),
@@ -87,7 +76,7 @@ User.init(
     },
     phone_number: {
       type: DataTypes.STRING(20),
-      allowNull: true,
+      allowNull: false,
     },
     image_url: {
       type: DataTypes.STRING(500),
@@ -96,14 +85,19 @@ User.init(
     is_active: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
+      allowNull: false,
     },
   },
   {
     sequelize,
     tableName: 'users',
-    timestamps: true,
+    modelName: 'User',
     paranoid: true,
     underscored: true,
+    timestamps: true,
+    defaultScope: {
+      attributes: { exclude: ['password_hash'] },
+    },
     indexes: [
       {
         unique: true,
@@ -111,13 +105,13 @@ User.init(
       },
     ],
     hooks: {
-      beforeCreate: async (user: User) => {
+      beforeCreate: async (user) => {
         if (user.password_hash) {
           const salt = await bcrypt.genSalt(10);
           user.password_hash = await bcrypt.hash(user.password_hash, salt);
         }
       },
-      beforeUpdate: async (user: User) => {
+      beforeUpdate: async (user) => {
         if (user.changed('password_hash')) {
           const salt = await bcrypt.genSalt(10);
           user.password_hash = await bcrypt.hash(user.password_hash, salt);
@@ -127,5 +121,4 @@ User.init(
   }
 );
 
-export type UserInstance = User;
 export default User;

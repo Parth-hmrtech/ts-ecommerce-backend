@@ -1,7 +1,7 @@
 import jwt, { Secret, SignOptions } from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
-import users, { UserInstance, UserCreationAttributes } from '../models/user';
+import User, { UserAttributes, UserCreationAttributes } from '../models/user';
 
 dotenv.config({ path: '../.env' });
 
@@ -24,43 +24,35 @@ interface JwtPayload {
   role: 'buyer' | 'seller';
 }
 
-/**
- * Register a new user
- */
-const createUser = async (userBody: UserCreationAttributes): Promise<UserInstance> => {
+
+const createUser = async (userBody: UserCreationAttributes): Promise<User> => {
   const { email, role } = userBody;
 
   if (!email || !role) {
     throw new Error('Email and role are required.');
   }
 
-  const existingUser = await users.findOne({ where: { email, role } });
+  const existingUser = await User.findOne({ where: { email, role } });
 
   if (existingUser) {
     throw new Error(`Email is already registered as a ${role}.`);
   }
 
-  const newUser = await users.create(userBody);
+  const newUser = await User.create(userBody);
   return newUser;
+
 };
 
-/**
- * Login existing user
- */
-const loginUser = async ({
-  email,
-  password,
-  role,
-}: LoginUserInput): Promise<{ token: string; user: UserInstance }> => {
-  const user = await users.findOne({
+const loginUser = async ({ email, password, role,}: LoginUserInput): Promise<{ token: string; user: Omit<UserAttributes, 'password_hash'> }> => {
+
+  const user = await User.unscoped().findOne({
     where: {
       email,
       role,
       is_active: true,
     },
   });
-  console.log(user);
-  
+
   if (!user || !(await user.validPassword(password))) {
     throw new Error('Invalid email, password, or role');
   }
@@ -75,46 +67,36 @@ const loginUser = async ({
     expiresIn: JWT_EXPIRES_IN,
   } as SignOptions);
 
-  return { token, user };
+  const { password_hash, ...safeUser } = user.get({ plain: true });
+
+  return { token, user: safeUser };
 };
 
-/**
- * Reset user password (used in forgot password flow)
- */
-const forgotUserPassword = async (
-  email: string,
-  newPassword: string,
-  role: 'buyer' | 'seller'
-): Promise<UserInstance | null> => {
-  const user = await users.findOne({ where: { email, role } });
+const forgotUserPassword = async ( email: string, newPassword: string, role: 'buyer' | 'seller'): Promise<User | null> => {
+
+  const user = await User.findOne({ where: { email, role } });
 
   if (!user) return null;
 
-  // Hash new password before saving
   const hashedPassword = await bcrypt.hash(newPassword, 10);
   user.password_hash = hashedPassword;
 
   await user.save();
 
   return user;
+
 };
 
-/**
- * Validate user by ID
- */
-const isValidUser = async ({
-  id,
-}: {
-  id: string;
-}): Promise<UserInstance | null> => {
+const isValidUser = async ({ id, }: {id: string;}): Promise<Omit<UserAttributes, 'password_hash'> | null> => {
+ 
   if (!id) return null;
-
-  const user = await users.findOne({
+  const user = await User.findOne({
     where: { id },
     attributes: { exclude: ['password_hash'] },
   });
 
-  return user;
+  return user?.get({ plain: true }) || null;
+
 };
 
 export {

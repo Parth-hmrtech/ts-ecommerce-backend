@@ -53,11 +53,11 @@ const createUserController = async (req: Request, res: Response): Promise<Respon
 
 const loginUserController = async (req: Request, res: Response): Promise<Response> => {
   try {
-    
-    
+
+
     const { token, user } = await loginUser(req.body);
 
-    
+
     return res.status(200).json({
       error: false,
       message: 'You have logged in successfully!',
