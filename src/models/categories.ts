@@ -53,7 +53,6 @@ Category.init(
   {
     sequelize,
     tableName: 'categories',
-    freezeTableName: true, // optional but recommended
     timestamps: true,
     paranoid: true,
     underscored: true,
