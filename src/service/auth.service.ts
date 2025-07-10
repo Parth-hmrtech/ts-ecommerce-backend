@@ -43,7 +43,7 @@ const createUser = async (userBody: UserCreationAttributes): Promise<User> => {
 
 };
 
-const loginUser = async ({ email, password, role,}: LoginUserInput): Promise<{ token: string; user: Omit<UserAttributes, 'password_hash'> }> => {
+const loginUser = async ({ email, password, role, }: LoginUserInput): Promise<{ token: string; user: Omit<UserAttributes, 'password_hash'> }> => {
 
   const user = await User.unscoped().findOne({
     where: {
@@ -73,22 +73,32 @@ const loginUser = async ({ email, password, role,}: LoginUserInput): Promise<{ t
 };
 
 const forgotUserPassword = async ( email: string, newPassword: string, role: 'buyer' | 'seller'): Promise<User | null> => {
+ 
+  try {
+  
+    const user = await User.findOne({ where: { email, role } });
 
-  const user = await User.findOne({ where: { email, role } });
+    if (!user) {
+      console.log(`User not found with email: ${email} and role: ${role}`);
+      return null;
+    }
 
-  if (!user) return null;
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password_hash = hashedPassword;
 
-  const hashedPassword = await bcrypt.hash(newPassword, 10);
-  user.password_hash = hashedPassword;
+    await user.save();
 
-  await user.save();
-
-  return user;
-
+    console.log(`Password updated successfully for user ID: ${user.id}`);
+    return user;
+  } catch (error) {
+    console.error(`Failed to reset password:`, error);
+    return null;
+  }
 };
 
-const isValidUser = async ({ id, }: {id: string;}): Promise<Omit<UserAttributes, 'password_hash'> | null> => {
- 
+
+const isValidUser = async ({ id, }: { id: string; }): Promise<Omit<UserAttributes, 'password_hash'> | null> => {
+
   if (!id) return null;
   const user = await User.findOne({
     where: { id },

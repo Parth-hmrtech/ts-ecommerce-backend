@@ -54,18 +54,17 @@ const createUserController = async (req: Request, res: Response): Promise<Respon
 const loginUserController = async (req: Request, res: Response): Promise<Response> => {
   try {
 
-
     const { token, user } = await loginUser(req.body);
-
-
+    
     return res.status(200).json({
       error: false,
       message: 'You have logged in successfully!',
       data: { user, token },
     });
+  
   } catch (error: any) {
+  
     console.error('Login error:', error.message);
-
     return res.status(401).json({
       error: true,
       message: error.message || 'Invalid login credentials',
@@ -75,6 +74,7 @@ const loginUserController = async (req: Request, res: Response): Promise<Respons
 
 
 const logoutUserController = (req: Request, res: Response): Response => {
+
   req.session.destroy(() => {
     res.clearCookie('connect.sid');
 
@@ -87,6 +87,7 @@ const logoutUserController = (req: Request, res: Response): Response => {
 
   return res;
 };
+
 
 
 const forgotPasswordController = async (req: Request, res: Response): Promise<Response> => {

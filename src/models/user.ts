@@ -22,27 +22,29 @@ export type UserCreationAttributes = Optional<
   'id' | 'createdAt' | 'updatedAt' | 'deletedAt'
 >;
 
-export class User extends Model<UserAttributes, UserCreationAttributes>
-  implements UserAttributes {
-  public id!: string;
-  public first_name!: string;
-  public last_name!: string;
-  public email!: string;
-  public password_hash!: string;
-  public role!: 'seller' | 'buyer';
-  public phone_number!: string;
-  public image_url!: string;
-  public is_active!: boolean;
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
-  public readonly deletedAt!: Date | null;
+export class User
+  extends Model<UserAttributes, UserCreationAttributes>
+  implements UserAttributes
+{
+  declare id: string;
+  declare first_name: string;
+  declare last_name: string;
+  declare email: string;
+  declare password_hash: string;
+  declare role: 'seller' | 'buyer';
+  declare phone_number: string;
+  declare image_url: string;
+  declare is_active: boolean;
+  declare readonly createdAt: Date;
+  declare readonly updatedAt: Date;
+  declare deletedAt: Date | null;
 
-public async validPassword(password: string): Promise<boolean> {
-  const storedHash = this.getDataValue('password_hash');
-  console.log('[Password Compare]', { password, storedHash });
-  return bcrypt.compare(password, storedHash);
-}
-
+  public async validPassword(password: string): Promise<boolean> {
+    const storedHash = this.getDataValue('password_hash');
+    const match = await bcrypt.compare(password, storedHash);
+    // console.log('[Password Compare]', { password, storedHash, match });
+    return match;
+  }
 }
 
 User.init(
@@ -63,6 +65,7 @@ User.init(
     email: {
       type: DataTypes.STRING(255),
       allowNull: false,
+      unique: true,
       validate: { isEmail: true },
     },
     password_hash: {
@@ -84,17 +87,17 @@ User.init(
     },
     is_active: {
       type: DataTypes.BOOLEAN,
-      defaultValue: true,
       allowNull: false,
+      defaultValue: true,
     },
   },
   {
     sequelize,
-    tableName: 'users',
     modelName: 'User',
+    tableName: 'users',
+    timestamps: true,
     paranoid: true,
     underscored: true,
-    timestamps: true,
     defaultScope: {
       attributes: { exclude: ['password_hash'] },
     },
@@ -105,16 +108,23 @@ User.init(
       },
     ],
     hooks: {
-      beforeCreate: async (user) => {
+      beforeCreate: async (user: User) => {
         if (user.password_hash) {
           const salt = await bcrypt.genSalt(10);
           user.password_hash = await bcrypt.hash(user.password_hash, salt);
         }
       },
-      beforeUpdate: async (user) => {
+      beforeUpdate: async (user: User) => {
         if (user.changed('password_hash')) {
-          const salt = await bcrypt.genSalt(10);
-          user.password_hash = await bcrypt.hash(user.password_hash, salt);
+          const current = user.getDataValue('password_hash');
+          const isHashed = current.startsWith('$2b$') || current.startsWith('$2a$');
+
+          if (!isHashed) {
+            const salt = await bcrypt.genSalt(10);
+            user.password_hash = await bcrypt.hash(current, salt);
+          } else {
+            console.log('[beforeUpdate] Skipping hashing — already hashed');
+          }
         }
       },
     },
