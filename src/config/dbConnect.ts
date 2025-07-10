@@ -9,7 +9,7 @@ const { DB_NAME, DB_USER, DB_PASS, DB_HOST } = process.env;
 
 // Type safety check for required vars
 if (!DB_NAME || !DB_USER || !DB_PASS || !DB_HOST) {
-  throw new Error("❌ Missing required environment variables for database connection.");
+  throw new Error("Missing required environment variables for database connection.");
 }
 
 // Sequelize instance
