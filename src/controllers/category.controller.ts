@@ -13,16 +13,14 @@ import {
   getSubCategoryByCategoryId
 } from '../service/category.service';
 
-// Custom Request interface for authenticated routes
 interface AuthRequest extends Request {
   user: {
     id: string;
   };
 }
 
-// ----- Category Controllers -----
 
-export const createCategoryController: RequestHandler = async (req, res) => {
+const createCategoryController: RequestHandler = async (req, res) => {
   try {
     const { user } = req as AuthRequest;
     const categories = await createCategory({ seller_id: user.id, ...req.body });
@@ -37,7 +35,7 @@ export const createCategoryController: RequestHandler = async (req, res) => {
   }
 };
 
-export const getCategoryController: RequestHandler = async (req, res) => {
+const getCategoryController: RequestHandler = async (req, res) => {
   try {
     const { user } = req as AuthRequest;
     console.log("hello");
@@ -54,7 +52,7 @@ export const getCategoryController: RequestHandler = async (req, res) => {
   }
 };
 
-export const updateCategoryController: RequestHandler = async (req, res) => {
+const updateCategoryController: RequestHandler = async (req, res) => {
   try {
     const category = await updateCategory({ ...req.params, ...req.body });
 
@@ -68,7 +66,7 @@ export const updateCategoryController: RequestHandler = async (req, res) => {
   }
 };
 
-export const deleteCategoryController: RequestHandler = async (req, res) => {
+const deleteCategoryController: RequestHandler = async (req, res) => {
   try {
     const category = await deleteCategory({ id: req.params.id });
 
@@ -82,7 +80,7 @@ export const deleteCategoryController: RequestHandler = async (req, res) => {
   }
 };
 
-export const fetchAllCategoryController: RequestHandler = async (_req, res) => {
+const fetchAllCategoryController: RequestHandler = async (_req, res) => {
   try {
     const categories = await fetchAllCategory();
 
@@ -96,9 +94,7 @@ export const fetchAllCategoryController: RequestHandler = async (_req, res) => {
   }
 };
 
-// ----- SubCategory Controllers -----
-
-export const createSubCategoryController: RequestHandler = async (req, res) => {
+const createSubCategoryController: RequestHandler = async (req, res) => {
   try {
     const { user } = req as AuthRequest;
     const subCategory = await createSubCategory({ seller_id: user.id, ...req.body });
@@ -113,7 +109,7 @@ export const createSubCategoryController: RequestHandler = async (req, res) => {
   }
 };
 
-export const getSubCategoryController: RequestHandler = async (req, res) => {
+const getSubCategoryController: RequestHandler = async (req, res) => {
   try {
     const { user } = req as AuthRequest;
     const subCategories = await getSubCategory({ id: user.id });
@@ -128,7 +124,7 @@ export const getSubCategoryController: RequestHandler = async (req, res) => {
   }
 };
 
-export const getSubCategoryByCategoryIdController: RequestHandler = async (req, res) => {
+const getSubCategoryByCategoryIdController: RequestHandler = async (req, res) => {
   try {
     const subCategories = await getSubCategoryByCategoryId({ category_id: req.params.categoryId });
 
@@ -142,7 +138,7 @@ export const getSubCategoryByCategoryIdController: RequestHandler = async (req, 
   }
 };
 
-export const updateSubCategoryController: RequestHandler = async (req, res) => {
+const updateSubCategoryController: RequestHandler = async (req, res) => {
   try {
     const updatedSubCategory = await updateSubCategory({ ...req.params, ...req.body });
 
@@ -156,7 +152,7 @@ export const updateSubCategoryController: RequestHandler = async (req, res) => {
   }
 };
 
-export const deleteSubCategoryController: RequestHandler = async (req, res) => {
+const deleteSubCategoryController: RequestHandler = async (req, res) => {
   try {
     const deletedSubCategory = await deleteSubCategory({ id: req.params.id });
 
@@ -170,7 +166,7 @@ export const deleteSubCategoryController: RequestHandler = async (req, res) => {
   }
 };
 
-export const fetchAllSubCategoryController: RequestHandler = async (_req, res) => {
+const fetchAllSubCategoryController: RequestHandler = async (_req, res) => {
   try {
     const allSubCategories = await fetchAllSubCategory();
 
@@ -182,4 +178,19 @@ export const fetchAllSubCategoryController: RequestHandler = async (_req, res) =
   } catch (error: any) {
     return res.status(500).json({ error: true, message: error.message });
   }
+};
+
+
+export {
+  createCategoryController,
+  getCategoryController,
+  updateCategoryController,
+  deleteCategoryController,
+  fetchAllCategoryController,
+  createSubCategoryController,
+  getSubCategoryController,
+  getSubCategoryByCategoryIdController,
+  updateSubCategoryController,
+  deleteSubCategoryController,
+  fetchAllSubCategoryController
 };
