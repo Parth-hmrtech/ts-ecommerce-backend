@@ -59,10 +59,10 @@ SubCategory.init(
   {
     sequelize,
     tableName: 'sub_categories',
-    freezeTableName: true, // optional but makes table name predictable
+    freezeTableName: true,
     timestamps: true,
-    paranoid: true, // enables soft deletes
-    underscored: true, // created_at instead of createdAt
+    paranoid: true,
+    underscored: true,
   }
 );
 
