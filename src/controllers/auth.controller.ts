@@ -4,15 +4,16 @@ import {
   loginUser,
   forgotUserPassword,
 } from '../service/auth.service';
+
 import { sendEmail } from '../utils/emailService';
 import { generateRandomPassword } from '../utils/password';
 import { uploadFile } from '../utils/uploadImage';
 import { UniqueConstraintError } from 'sequelize';
-import { UserCreationAttributes } from '../models/user';
+import { ICreateUser } from '../types/user.types'; 
 
-const createUserController = async (req: Request, res: Response): Promise<Response> => {
+const createUserController = async (req: Request, res: Response): Promise<void> => {
   try {
-    const userData: UserCreationAttributes = { ...req.body };
+    const userData: ICreateUser = { ...req.body };
 
     if (req.file?.path) {
       const imageUrl = await uploadFile(req.file.path);
@@ -21,84 +22,80 @@ const createUserController = async (req: Request, res: Response): Promise<Respon
 
     const user = await createUser(userData);
 
-    return res.status(201).json({
+    res.status(201).json({
       error: false,
       message: 'User registered successfully!',
       data: { user },
     });
+
   } catch (error: any) {
     console.error('User creation error:', error);
 
     if (error instanceof UniqueConstraintError) {
-      return res.status(400).json({
+      res.status(400).json({
         error: true,
         message: 'Email already registered for this role.',
       });
+      return;
     }
 
     if (error.message?.startsWith('Email is already registered as')) {
-      return res.status(400).json({
+      res.status(400).json({
         error: true,
         message: error.message,
       });
+      return;
     }
 
-    return res.status(500).json({
+    res.status(500).json({
       error: true,
       message: error.message || 'Something went wrong.',
     });
   }
 };
 
-
-const loginUserController = async (req: Request, res: Response): Promise<Response> => {
+const loginUserController = async (req: Request, res: Response): Promise<void> => {
   try {
-
     const { token, user } = await loginUser(req.body);
-    
-    return res.status(200).json({
+
+    res.status(200).json({
       error: false,
       message: 'You have logged in successfully!',
       data: { user, token },
     });
-  
+
   } catch (error: any) {
-  
     console.error('Login error:', error.message);
-    return res.status(401).json({
+
+    res.status(401).json({
       error: true,
       message: error.message || 'Invalid login credentials',
     });
   }
 };
 
-
-const logoutUserController = (req: Request, res: Response): Response => {
-
+const logoutUserController = async (req: Request, res: Response): Promise<void> => {
   req.session.destroy(() => {
     res.clearCookie('connect.sid');
 
-    return res.status(200).json({
+    res.status(200).json({
       error: false,
       message: 'Logged out successfully',
       data: null,
     });
   });
-
-  return res;
 };
 
-
-
-const forgotPasswordController = async (req: Request, res: Response): Promise<Response> => {
+const forgotPasswordController = async (req: Request, res: Response): Promise<void> => {
   try {
     const { email, role } = req.body;
 
     if (!email || !role) {
-      return res.status(400).json({
+      res.status(400).json({
         status: 'error',
         message: 'Email and role are required',
       });
+      return;
     }
 
     const newPassword = generateRandomPassword();
@@ -106,15 +103,16 @@ const forgotPasswordController = async (req: Request, res: Response): Promise<Re
     const user = await forgotUserPassword(email, newPassword, role);
 
     if (!user) {
-      return res.status(404).json({
+      res.status(404).json({
         status: 'error',
         message: 'User not found',
       });
+      return;
     }
 
     await sendEmail(newPassword, email);
 
-    return res.json({
+    res.status(200).json({
       status: 'success',
       message: 'Password sent to your email ID',
       data: {
@@ -126,7 +124,8 @@ const forgotPasswordController = async (req: Request, res: Response): Promise<Re
 
   } catch (error: any) {
     console.error('Forgot password error:', error);
-    return res.status(500).json({
+
+    res.status(500).json({
       status: 'error',
       message: 'Internal server error',
     });

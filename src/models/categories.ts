@@ -1,21 +1,9 @@
-import { DataTypes, Model, Optional } from 'sequelize';
+import { DataTypes, Model } from 'sequelize';
 import sequelize from '../config/dbConnect';
-
-interface CategoryAttributes {
-  id: string;
-  seller_id: string;
-  category_name: string;
-  is_active: boolean;
-  createdAt?: Date;
-  updatedAt?: Date;
-  deletedAt?: Date | null;
-}
-
-interface CategoryCreationAttributes
-  extends Optional<
-    CategoryAttributes,
-    'id' | 'is_active' | 'createdAt' | 'updatedAt' | 'deletedAt'
-  > {}
+import {
+  CategoryAttributes,
+  CategoryCreationAttributes,
+} from '../types/category.types';
 
 class Category
   extends Model<CategoryAttributes, CategoryCreationAttributes>
@@ -25,9 +13,9 @@ class Category
   public category_name!: string;
   public is_active!: boolean;
 
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
-  public readonly deletedAt!: Date | null;
+  public readonly createdAt?: Date;
+  public readonly updatedAt?: Date;
+  public readonly deletedAt?: Date | null;
 }
 
 Category.init(
@@ -47,12 +35,14 @@ Category.init(
     },
     is_active: {
       type: DataTypes.BOOLEAN,
+      allowNull: false,
       defaultValue: true,
     },
   },
   {
     sequelize,
     tableName: 'categories',
+    modelName: 'Category',
     timestamps: true,
     paranoid: true,
     underscored: true,

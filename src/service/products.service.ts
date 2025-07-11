@@ -1,52 +1,45 @@
-import product from '../models/products';
-import categories from '../models/categories';
-import subCategories from '../models/subCategories';
-import wishlist from '../models/wishlist';
+import Product from '../models/products';
+import Category from '../models/categories';
+import SubCategory from '../models/subCategories';
+import Wishlist from '../models/wishlist';
+
+import {
+  ICreateProduct,
+  IUpdateProduct,
+  IProduct,
+  ImageUploadInput,
+} from '../types/product.types';
+
+import {
+  IWishlist,
+  IWishlistCreate,
+} from '../types/wishlist.types';
 
 
-interface ProductInput {
-  seller_id: string;
-  product_name?: string;
-  description?: string;
-  price?: number;
-  quantity?: number;
-  category_id?: string;
-  subcategory_id?: string;
-  image_url?: any;
-  is_active?: boolean;
-}
 
-interface ImageUploadInput {
-  product_id: string;
-  image_urls: string[];
-}
-
-interface UpdateProductInput extends Partial<ProductInput> {
-  productId: string;
-}
-
-interface WishlistInput {
-  buyer_id: string;
-  product_id: string;
-}
-
-
-const createProduct = async ({ seller_id, ...productBody }: ProductInput) => {
-  const createdProduct = await product.create({
+const createProduct = async ({
+  seller_id,
+  ...productBody
+}: ICreateProduct): Promise<IProduct> => {
+  const createdProduct = await Product.create({
     seller_id,
     ...productBody,
   });
-  return createdProduct;
+
+  return createdProduct.get({ plain: true }) as IProduct;
 };
 
-const uploadProductImage = async ({ product_id, image_urls }: ImageUploadInput) => {
+const uploadProductImage = async ({
+  product_id,
+  image_urls,
+}: ImageUploadInput): Promise<number> => {
   if (!Array.isArray(image_urls)) {
     throw new Error('image_urls must be an array');
   }
 
   const formattedImages = image_urls.map((url) => ({ image_url: url }));
 
-  const [affectedRows] = await product.update(
+  const [affectedRows] = await Product.update(
     { image_url: formattedImages },
     { where: { id: product_id } }
   );
@@ -54,87 +47,102 @@ const uploadProductImage = async ({ product_id, image_urls }: ImageUploadInput) 
   return affectedRows;
 };
 
-const getProduct = async (user: { id: string }) => {
-  return await product.findAll({
+const getProduct = async (user: { id: string }): Promise<IProduct[]> => {
+  const products = await Product.findAll({
     where: { seller_id: user.id },
     include: [
-      { model: categories, as: 'category' },
-      { model: subCategories, as: 'subCategory' },
+      { model: Category, as: 'category' },
+      { model: SubCategory, as: 'subCategory' },
     ],
   });
+
+  return products.map((p) => p.get({ plain: true }) as IProduct);
 };
 
-const updateProduct = async ({ productId, ...updateProductRecords }: UpdateProductInput) => {
-  const [updatedCount] = await product.update(
-    { ...updateProductRecords },
-    { where: { id: productId } }
-  );
+const updateProduct = async ({
+  productId,
+  ...updateData
+}: IUpdateProduct & { productId: string }): Promise<boolean> => {
+  const [updatedCount] = await Product.update(updateData, {
+    where: { id: productId },
+  });
 
   return updatedCount > 0;
 };
 
-const deleteProduct = async (productId: string) => {
-  const deleted = await product.destroy({ where: { id: productId } });
+const deleteProduct = async (productId: string): Promise<boolean> => {
+  const deleted = await Product.destroy({ where: { id: productId } });
   return deleted > 0;
 };
 
-const fatchAllProducts = async () => {
-  return await product.findAll({
+const fatchAllProducts = async (): Promise<IProduct[]> => {
+  const products = await Product.findAll({
     include: [
       {
-        model: categories,
+        model: Category,
         as: 'category',
         attributes: { exclude: ['deleted_at'] },
       },
       {
-        model: subCategories,
+        model: SubCategory,
         as: 'subCategory',
         attributes: { exclude: ['deleted_at'] },
       },
     ],
   });
+
+  return products.map((p) => p.get({ plain: true }) as IProduct);
 };
 
-const fetchProductById = async (id: string) => {
-  return await product.findOne({
+const fetchProductById = async (id: string): Promise<IProduct | null> => {
+  const product = await Product.findOne({
     where: { id },
     include: [
       {
-        model: categories,
+        model: Category,
         as: 'category',
         attributes: { exclude: ['deleted_at'] },
       },
       {
-        model: subCategories,
+        model: SubCategory,
         as: 'subCategory',
         attributes: { exclude: ['deleted_at'] },
       },
     ],
   });
+
+  return product ? (product.get({ plain: true }) as IProduct) : null;
 };
 
 
-const createWishlist = async ({ buyer_id, product_id }: WishlistInput) => {
-  const [wishlistItem, created] = await wishlist.findOrCreate({
+const createWishlist = async ({
+  buyer_id,
+  product_id,
+}: IWishlistCreate): Promise<IWishlist> => {
+  const [wishlistItem] = await Wishlist.findOrCreate({
     where: { buyer_id, product_id },
     defaults: { buyer_id, product_id },
   });
 
-  return wishlistItem;
+  return wishlistItem.get({ plain: true }) as IWishlist;
 };
 
-const getWishlist = async (userId: string) => {
-  return await wishlist.findAll({
+const getWishlist = async (userId: string): Promise<IWishlist[]> => {
+  const items = await Wishlist.findAll({
     where: { buyer_id: userId },
   });
+
+  return items.map((w) => w.get({ plain: true }) as IWishlist);
 };
 
-const deleteWishlist = async (productId: string) => {
-  const deleted = await wishlist.destroy({
+const deleteWishlist = async (productId: string): Promise<boolean> => {
+  const deleted = await Wishlist.destroy({
     where: { product_id: productId },
   });
+
   return deleted > 0;
 };
+
 
 
 export {

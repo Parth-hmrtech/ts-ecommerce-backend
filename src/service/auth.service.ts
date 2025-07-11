@@ -1,7 +1,11 @@
 import jwt, { Secret, SignOptions } from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
-import User, { UserAttributes, UserCreationAttributes } from '../models/user';
+import User from '../models/user'; 
+import {
+  IUser,
+  ICreateUser,
+} from '../types/user.types'; // ✅ Using interface-based types
 
 dotenv.config({ path: '../.env' });
 
@@ -24,8 +28,9 @@ interface JwtPayload {
   role: 'buyer' | 'seller';
 }
 
-
-const createUser = async (userBody: UserCreationAttributes): Promise<User> => {
+const createUser = async (
+  userBody: ICreateUser
+): Promise<User> => {
   const { email, role } = userBody;
 
   if (!email || !role) {
@@ -38,19 +43,14 @@ const createUser = async (userBody: UserCreationAttributes): Promise<User> => {
     throw new Error(`Email is already registered as a ${role}.`);
   }
 
-  const newUser = await User.create(userBody);
-  return newUser;
-
+  return await User.create(userBody);
 };
 
-const loginUser = async ({ email, password, role, }: LoginUserInput): Promise<{ token: string; user: Omit<UserAttributes, 'password_hash'> }> => {
-
+const loginUser = async (
+  { email, password, role }: LoginUserInput
+): Promise<{ token: string; user: Omit<IUser, 'password_hash'> }> => {
   const user = await User.unscoped().findOne({
-    where: {
-      email,
-      role,
-      is_active: true,
-    },
+    where: { email, role, is_active: true },
   });
 
   if (!user || !(await user.validPassword(password))) {
@@ -67,15 +67,17 @@ const loginUser = async ({ email, password, role, }: LoginUserInput): Promise<{ 
     expiresIn: JWT_EXPIRES_IN,
   } as SignOptions);
 
-  const { password_hash, ...safeUser } = user.get({ plain: true });
+  const { password_hash, ...safeUser } = user.get({ plain: true }) as IUser;
 
   return { token, user: safeUser };
 };
 
-const forgotUserPassword = async ( email: string, newPassword: string, role: 'buyer' | 'seller'): Promise<User | null> => {
- 
+const forgotUserPassword = async (
+  email: string,
+  newPassword: string,
+  role: 'buyer' | 'seller'
+): Promise<User | null> => {
   try {
-  
     const user = await User.findOne({ where: { email, role } });
 
     if (!user) {
@@ -83,30 +85,29 @@ const forgotUserPassword = async ( email: string, newPassword: string, role: 'bu
       return null;
     }
 
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-    user.password_hash = hashedPassword;
-
+    user.password_hash = await bcrypt.hash(newPassword, 10);
     await user.save();
 
-    console.log(`Password updated successfully for user ID: ${user.id}`);
+    console.log(`Password updated for user ID: ${user.id}`);
     return user;
   } catch (error) {
-    console.error(`Failed to reset password:`, error);
+    console.error('Failed to reset password:', error);
     return null;
   }
 };
 
-
-const isValidUser = async ({ id, }: { id: string; }): Promise<Omit<UserAttributes, 'password_hash'> | null> => {
-
+// ✅ Validate user by ID
+const isValidUser = async (
+  { id }: { id: string }
+): Promise<Omit<IUser, 'password_hash'> | null> => {
   if (!id) return null;
+
   const user = await User.findOne({
     where: { id },
     attributes: { exclude: ['password_hash'] },
   });
 
-  return user?.get({ plain: true }) || null;
-
+  return user?.get({ plain: true }) as Omit<IUser, 'password_hash'> || null;
 };
 
 export {

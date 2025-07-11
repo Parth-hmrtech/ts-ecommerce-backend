@@ -1,41 +1,26 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config/dbConnect';
-import Category from './categories'; 
-import SubCategory from './subCategories'; 
+import Category from './categories';
+import SubCategory from './subCategories';
+import { IProduct, ICreateProduct } from '../types/product.types';
 
-interface ProductAttributes {
-  id: string;
-  seller_id?: string | null;
-  category_id?: string | null;
-  subcategory_id?: string | null;
-  product_name?: string | null;
-  description?: string | null;
-  price?: number | null;
-  quantity?: number | null;
-  image_url?: any; 
-  is_active?: boolean;
-  createdAt?: Date;
-  updatedAt?: Date;
-  deletedAt?: Date | null;
-}
+interface ProductCreationAttributes extends Optional<IProduct, keyof ICreateProduct> {}
 
-interface ProductCreationAttributes extends Optional<ProductAttributes, 'id' | 'seller_id' | 'category_id' | 'subcategory_id' | 'product_name' | 'description' | 'price' | 'quantity' | 'image_url' | 'is_active' | 'createdAt' | 'updatedAt' | 'deletedAt'> {}
-
-class Product extends Model<ProductAttributes, ProductCreationAttributes> implements ProductAttributes {
+class Product extends Model<IProduct, ProductCreationAttributes> implements IProduct {
   public id!: string;
-  public seller_id!: string | null;
-  public category_id!: string | null;
-  public subcategory_id!: string | null;
-  public product_name!: string | null;
-  public description!: string | null;
-  public price!: number | null;
-  public quantity!: number | null;
-  public image_url!: any;
-  public is_active!: boolean;
+  public seller_id?: string | null;
+  public category_id?: string | null;
+  public subcategory_id?: string | null;
+  public product_name?: string | null;
+  public description?: string | null;
+  public price?: number | null;
+  public quantity?: number | null;
+  public image_url?: any;
+  public is_active?: boolean;
 
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
-  public readonly deletedAt!: Date | null;
+  public readonly createdAt?: Date;
+  public readonly updatedAt?: Date;
+  public readonly deletedAt?: Date | null;
 }
 
 Product.init(
@@ -93,6 +78,7 @@ Product.init(
   }
 );
 
+// 🔗 Associations
 Product.belongsTo(Category, {
   foreignKey: 'category_id',
   as: 'category',

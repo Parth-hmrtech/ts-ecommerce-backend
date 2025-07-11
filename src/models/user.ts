@@ -1,31 +1,12 @@
-import { DataTypes, Model, Optional } from 'sequelize';
+import { DataTypes, Model } from 'sequelize';
 import sequelize from '../config/dbConnect';
 import bcrypt from 'bcrypt';
+import {
+  IUser,
+  ICreateUser,
+} from '../types/user.types';
 
-export interface UserAttributes {
-  id: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-  password_hash: string;
-  role: 'seller' | 'buyer';
-  phone_number: string;
-  image_url: string;
-  is_active: boolean;
-  createdAt?: Date;
-  updatedAt?: Date;
-  deletedAt?: Date | null;
-}
-
-export type UserCreationAttributes = Optional<
-  UserAttributes,
-  'id' | 'createdAt' | 'updatedAt' | 'deletedAt'
->;
-
-export class User
-  extends Model<UserAttributes, UserCreationAttributes>
-  implements UserAttributes
-{
+export class User extends Model<IUser, ICreateUser> implements IUser {
   declare id: string;
   declare first_name: string;
   declare last_name: string;
@@ -41,8 +22,7 @@ export class User
 
   public async validPassword(password: string): Promise<boolean> {
     const storedHash = this.getDataValue('password_hash');
-    const match = await bcrypt.compare(password, storedHash);
-    return match;
+    return await bcrypt.compare(password, storedHash);
   }
 }
 
@@ -117,7 +97,6 @@ User.init(
         if (user.changed('password_hash')) {
           const current = user.getDataValue('password_hash');
           const isHashed = current.startsWith('$2b$') || current.startsWith('$2a$');
-
           if (!isHashed) {
             const salt = await bcrypt.genSalt(10);
             user.password_hash = await bcrypt.hash(current, salt);

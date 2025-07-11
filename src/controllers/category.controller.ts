@@ -1,4 +1,4 @@
-import { Request, Response, RequestHandler } from 'express';
+import { Request, Response } from 'express';
 import {
   createCategory,
   getCategory,
@@ -20,162 +20,173 @@ interface AuthRequest extends Request {
 }
 
 
-const createCategoryController: RequestHandler = async (req, res) => {
+const createCategoryController = async (req: Request, res: Response): Promise<void> => {
   try {
     const { user } = req as AuthRequest;
     const categories = await createCategory({ seller_id: user.id, ...req.body });
 
-    return res.status(200).json({
+    res.status(200).json({
       error: false,
       message: 'Category created successfully!',
       data: categories
     });
   } catch (error: any) {
-    return res.status(500).json({ error: true, message: error.message });
+    res.status(500).json({ error: true, message: error.message });
   }
 };
 
-const getCategoryController: RequestHandler = async (req, res) => {
+const getCategoryController = async (req: Request, res: Response): Promise<void> => {
   try {
     const { user } = req as AuthRequest;
-    
     const categories = await getCategory({ seller_id: user.id });
 
-    return res.status(200).json({
+    res.status(200).json({
       error: false,
       message: 'Categories retrieved successfully!',
       data: categories
     });
   } catch (error: any) {
-    return res.status(500).json({ error: true, message: error.message });
+    res.status(500).json({ error: true, message: error.message });
   }
 };
 
-const updateCategoryController: RequestHandler = async (req, res) => {
+const updateCategoryController = async (req: Request, res: Response): Promise<void> => {
   try {
     const category = await updateCategory({ ...req.params, ...req.body });
 
-    return res.status(200).json({
+    res.status(200).json({
       error: false,
       message: 'Category updated successfully!',
       data: category
     });
   } catch (error: any) {
-    return res.status(500).json({ error: true, message: error.message });
+    res.status(500).json({ error: true, message: error.message });
   }
 };
 
-const deleteCategoryController: RequestHandler = async (req, res) => {
+const deleteCategoryController = async (req: Request, res: Response): Promise<void> => {
   try {
-    const category = await deleteCategory({ id: req.params.id });
+    const deleted = await deleteCategory(req.params.id);
 
-    return res.status(200).json({
+    if (deleted === 0) {
+      res.status(404).json({
+        error: true,
+        message: 'Category not found!',
+      });
+      return;
+    }
+
+    res.status(200).json({
       error: false,
       message: 'Category deleted successfully!',
-      data: category
+      data: deleted,
     });
   } catch (error: any) {
-    return res.status(500).json({ error: true, message: error.message });
+    res.status(500).json({
+      error: true,
+      message: error.message || 'Internal server error',
+    });
   }
 };
 
-const fetchAllCategoryController: RequestHandler = async (_req, res) => {
+const fetchAllCategoryController = async (_req: Request, res: Response): Promise<void> => {
   try {
     const categories = await fetchAllCategory();
 
-    return res.status(200).json({
+    res.status(200).json({
       error: false,
       message: 'All categories retrieved successfully!',
       data: categories
     });
   } catch (error: any) {
-    return res.status(500).json({ error: true, message: error.message });
+    res.status(500).json({ error: true, message: error.message });
   }
 };
 
-const createSubCategoryController: RequestHandler = async (req, res) => {
+
+const createSubCategoryController = async (req: Request, res: Response): Promise<void> => {
   try {
     const { user } = req as AuthRequest;
     const subCategory = await createSubCategory({ seller_id: user.id, ...req.body });
 
-    return res.status(200).json({
+    res.status(200).json({
       error: false,
       message: 'Subcategory created successfully',
       data: subCategory
     });
   } catch (error: any) {
-    return res.status(500).json({ error: true, message: error.message });
+    res.status(500).json({ error: true, message: error.message });
   }
 };
 
-const getSubCategoryController: RequestHandler = async (req, res) => {
+const getSubCategoryController = async (req: Request, res: Response): Promise<void> => {
   try {
     const { user } = req as AuthRequest;
     const subCategories = await getSubCategory({ id: user.id });
 
-    return res.status(200).json({
+    res.status(200).json({
       error: false,
       message: 'Subcategories retrieved successfully',
       data: subCategories
     });
   } catch (error: any) {
-    return res.status(500).json({ error: true, message: error.message });
+    res.status(500).json({ error: true, message: error.message });
   }
 };
 
-const getSubCategoryByCategoryIdController: RequestHandler = async (req, res) => {
+const getSubCategoryByCategoryIdController = async (req: Request, res: Response): Promise<void> => {
   try {
     const subCategories = await getSubCategoryByCategoryId({ category_id: req.params.categoryId });
 
-    return res.status(200).json({
+    res.status(200).json({
       error: false,
       message: 'Subcategories by category retrieved successfully',
       data: subCategories
     });
   } catch (error: any) {
-    return res.status(500).json({ error: true, message: error.message });
+    res.status(500).json({ error: true, message: error.message });
   }
 };
 
-const updateSubCategoryController: RequestHandler = async (req, res) => {
+const updateSubCategoryController = async (req: Request, res: Response): Promise<void> => {
   try {
     const updatedSubCategory = await updateSubCategory({ ...req.params, ...req.body });
 
-    return res.status(200).json({
+    res.status(200).json({
       error: false,
       message: 'Subcategory updated successfully',
       data: updatedSubCategory
     });
   } catch (error: any) {
-    return res.status(500).json({ error: true, message: error.message });
+    res.status(500).json({ error: true, message: error.message });
   }
 };
 
-const deleteSubCategoryController: RequestHandler = async (req, res) => {
+const deleteSubCategoryController = async (req: Request, res: Response): Promise<void> => {
   try {
     const deletedSubCategory = await deleteSubCategory({ id: req.params.id });
 
-    return res.status(200).json({
+    res.status(200).json({
       error: false,
       message: 'Subcategory deleted successfully',
       data: deletedSubCategory
     });
   } catch (error: any) {
-    return res.status(500).json({ error: true, message: error.message });
+    res.status(500).json({ error: true, message: error.message });
   }
 };
 
-const fetchAllSubCategoryController: RequestHandler = async (_req, res) => {
+const fetchAllSubCategoryController = async (_req: Request, res: Response): Promise<void> => {
   try {
     const allSubCategories = await fetchAllSubCategory();
 
-    return res.status(200).json({
+    res.status(200).json({
       error: false,
       message: 'All subcategories retrieved successfully',
       data: allSubCategories
     });
   } catch (error: any) {
-    return res.status(500).json({ error: true, message: error.message });
+    res.status(500).json({ error: true, message: error.message });
   }
 };
 
