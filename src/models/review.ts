@@ -1,24 +1,13 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config/dbConnect';
-
-interface ReviewAttributes {
-  id: string;
-  order_id?: string | null;
-  product_id?: string | null;
-  seller_id?: string | null;
-  buyer_id?: string | null;
-  rating?: number | null;
-  comment?: string | null;
-  created_at?: Date;
-  updated_at?: Date;
-}
+import { IReview } from '../types/review.types';
 
 interface ReviewCreationAttributes extends Optional<
-  ReviewAttributes,
-  'id' | 'order_id' | 'product_id' | 'seller_id' | 'buyer_id' | 'rating' | 'comment' | 'created_at' | 'updated_at'
+  IReview,
+  'id' | 'order_id' | 'product_id' | 'seller_id' | 'buyer_id' | 'rating' | 'comment'
 > {}
 
-class Review extends Model<ReviewAttributes, ReviewCreationAttributes> implements ReviewAttributes {
+class Review extends Model<IReview, ReviewCreationAttributes> implements IReview {
   public id!: string;
   public order_id!: string | null;
   public product_id!: string | null;
@@ -26,8 +15,10 @@ class Review extends Model<ReviewAttributes, ReviewCreationAttributes> implement
   public buyer_id!: string | null;
   public rating!: number | null;
   public comment!: string | null;
-  public created_at!: Date;
-  public updated_at!: Date;
+
+  // These will be automatically managed by Sequelize
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
 }
 
 Review.init(
@@ -65,19 +56,11 @@ Review.init(
       type: DataTypes.TEXT,
       allowNull: true,
     },
-    created_at: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-    },
-    updated_at: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-    },
   },
   {
     sequelize,
     tableName: 'reviews',
-    timestamps: false,
+    timestamps: true, 
     underscored: true,
   }
 );
