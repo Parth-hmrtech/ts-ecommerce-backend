@@ -9,7 +9,7 @@ import {
 import { userAuthMiddleware } from '../middleware/auth.middleware.ts';
 
 const router = express.Router();
-const upload = multer({ dest: 'uploads/' }); // or use custom storage
+const upload = multer({ dest: 'src/uploads/' }); // or use custom storage
 
 
 router.get('/profile', userAuthMiddleware, getUserController);

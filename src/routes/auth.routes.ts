@@ -9,7 +9,7 @@ import {
 import { userAuthMiddleware } from '../middleware/auth.middleware';
 
 const router = express.Router();
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({ dest: 'src/uploads/' });
 
 router.post('/register', upload.single('image'), createUserController);
 router.post('/login', loginUserController);
