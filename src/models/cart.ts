@@ -3,13 +3,13 @@ import sequelize from '../config/dbConnect';
 import { ICart, ICartCreation } from '../types/cart.types';
 
 class Cart extends Model<ICart, ICartCreation> implements ICart {
-  public id!: string;
-  public buyer_id!: string;
-  public product_id!: string;
-  public quantity!: number;
+  declare id: string;
+  declare buyer_id: string;
+  declare product_id: string;
+  declare quantity: number;
 
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  declare readonly createdAt: Date;
+  declare readonly updatedAt: Date;
 }
 
 Cart.init(

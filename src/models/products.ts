@@ -7,20 +7,20 @@ import { IProduct, ICreateProduct } from '../types/product.types';
 interface ProductCreationAttributes extends Optional<IProduct, keyof ICreateProduct> {}
 
 class Product extends Model<IProduct, ProductCreationAttributes> implements IProduct {
-  public id!: string;
-  public seller_id?: string | null;
-  public category_id?: string | null;
-  public subcategory_id?: string | null;
-  public product_name?: string | null;
-  public description?: string | null;
-  public price?: number | null;
-  public quantity?: number | null;
-  public image_url?: any;
-  public is_active?: boolean;
+  declare id: string;
+  declare seller_id: string | null;
+  declare category_id: string | null;
+  declare subcategory_id: string | null;
+  declare product_name: string | null;
+  declare description: string | null;
+  declare price: number | null;
+  declare quantity: number | null;
+  declare image_url: any;
+  declare is_active: boolean;
 
-  public readonly createdAt?: Date;
-  public readonly updatedAt?: Date;
-  public readonly deletedAt?: Date | null;
+  declare readonly createdAt: Date;
+  declare readonly updatedAt: Date;
+  declare readonly deletedAt: Date | null;
 }
 
 Product.init(
@@ -78,7 +78,6 @@ Product.init(
   }
 );
 
-// 🔗 Associations
 Product.belongsTo(Category, {
   foreignKey: 'category_id',
   as: 'category',

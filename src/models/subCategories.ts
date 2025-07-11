@@ -21,15 +21,15 @@ interface SubCategoryCreationAttributes
 class SubCategory
   extends Model<SubCategoryAttributes, SubCategoryCreationAttributes>
   implements SubCategoryAttributes {
-  public id!: string;
-  public seller_id!: string;
-  public category_id!: string;
-  public sub_category_name!: string;
-  public is_active!: boolean;
+  declare id: string;
+  declare seller_id: string;
+  declare category_id: string;
+  declare sub_category_name: string;
+  declare is_active: boolean;
 
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
-  public readonly deletedAt!: Date | null;
+  declare readonly createdAt: Date;
+  declare readonly updatedAt: Date;
+  declare readonly deletedAt: Date | null;
 }
 
 SubCategory.init(
@@ -59,10 +59,10 @@ SubCategory.init(
   {
     sequelize,
     tableName: 'sub_categories',
-    freezeTableName: true, // optional but recommended
+    freezeTableName: true, // optional but makes table name predictable
     timestamps: true,
-    paranoid: true,
-    underscored: true,
+    paranoid: true, // enables soft deletes
+    underscored: true, // created_at instead of createdAt
   }
 );
 

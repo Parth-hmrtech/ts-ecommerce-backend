@@ -7,15 +7,16 @@ import {
 
 class Category
   extends Model<CategoryAttributes, CategoryCreationAttributes>
-  implements CategoryAttributes {
-  public id!: string;
-  public seller_id!: string;
-  public category_name!: string;
-  public is_active!: boolean;
+  implements CategoryAttributes
+{
+  declare id: string;
+  declare seller_id: string;
+  declare category_name: string;
+  declare is_active: boolean;
 
-  public readonly createdAt?: Date;
-  public readonly updatedAt?: Date;
-  public readonly deletedAt?: Date | null;
+  declare readonly createdAt?: Date;
+  declare readonly updatedAt?: Date;
+  declare readonly deletedAt?: Date | null;
 }
 
 Category.init(

@@ -8,17 +8,16 @@ interface ReviewCreationAttributes extends Optional<
 > {}
 
 class Review extends Model<IReview, ReviewCreationAttributes> implements IReview {
-  public id!: string;
-  public order_id!: string | null;
-  public product_id!: string | null;
-  public seller_id!: string | null;
-  public buyer_id!: string | null;
-  public rating!: number | null;
-  public comment!: string | null;
+  declare id: string;
+  declare order_id: string | null;
+  declare product_id: string | null;
+  declare seller_id: string | null;
+  declare buyer_id: string | null;
+  declare rating: number | null;
+  declare comment: string | null;
 
-  // These will be automatically managed by Sequelize
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  declare readonly createdAt: Date;
+  declare readonly updatedAt: Date;
 }
 
 Review.init(
@@ -60,7 +59,7 @@ Review.init(
   {
     sequelize,
     tableName: 'reviews',
-    timestamps: true, 
+    timestamps: true,
     underscored: true,
   }
 );

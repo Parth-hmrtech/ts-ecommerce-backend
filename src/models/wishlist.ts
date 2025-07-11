@@ -15,15 +15,16 @@ interface WishlistCreationAttributes extends Optional<
   'id' | 'added_at' | 'createdAt' | 'updatedAt'
 > {}
 
-class Wishlist extends Model<WishlistAttributes, WishlistCreationAttributes>
+class Wishlist
+  extends Model<WishlistAttributes, WishlistCreationAttributes>
   implements WishlistAttributes {
-  public id!: string;
-  public buyer_id!: string;
-  public product_id!: string;
-  public added_at!: Date;
+  declare id: string;
+  declare buyer_id: string;
+  declare product_id: string;
+  declare added_at: Date;
 
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  declare readonly createdAt: Date;
+  declare readonly updatedAt: Date;
 }
 
 Wishlist.init(
