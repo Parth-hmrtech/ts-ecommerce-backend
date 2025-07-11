@@ -1,11 +1,11 @@
 import jwt, { Secret, SignOptions } from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
-import User from '../models/user'; 
+import User from '../models/user';
 import {
   IUser,
   ICreateUser,
-} from '../types/user.types'; 
+} from '../types/user.types';
 
 dotenv.config({ path: '../.env' });
 
@@ -28,8 +28,8 @@ interface JwtPayload {
   role: 'buyer' | 'seller';
 }
 
-const createUser = async ( userBody: ICreateUser): Promise<User> => {
-  
+const createUser = async (userBody: ICreateUser): Promise<User> => {
+
   const { email, role } = userBody;
 
   if (!email || !role) {
@@ -45,8 +45,8 @@ const createUser = async ( userBody: ICreateUser): Promise<User> => {
   return await User.create(userBody);
 };
 
-const loginUser = async ( { email, password, role }: LoginUserInput): Promise<{ token: string; user: Omit<IUser, 'password_hash'> }> => {
-  
+const loginUser = async ({ email, password, role }: LoginUserInput): Promise<{ token: string; user: Omit<IUser, 'password_hash'> }> => {
+
   const user = await User.unscoped().findOne({
     where: { email, role, is_active: true },
   });
@@ -70,10 +70,10 @@ const loginUser = async ( { email, password, role }: LoginUserInput): Promise<{ 
   return { token, user: safeUser };
 };
 
-const forgotUserPassword = async ( email: string, newPassword: string, role: 'buyer' | 'seller'): Promise<User | null> => {
-  
+const forgotUserPassword = async (email: string, newPassword: string, role: 'buyer' | 'seller'): Promise<User | null> => {
+
   try {
-  
+
     const user = await User.findOne({ where: { email, role } });
 
     if (!user) {
@@ -92,8 +92,8 @@ const forgotUserPassword = async ( email: string, newPassword: string, role: 'bu
   }
 };
 
-const isValidUser = async ( { id }: { id: string }): Promise<Omit<IUser, 'password_hash'> | null> => {
-  
+const isValidUser = async ({ id }: { id: string }): Promise<Omit<IUser, 'password_hash'> | null> => {
+
   if (!id) return null;
 
   const user = await User.findOne({
