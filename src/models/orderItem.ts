@@ -1,74 +1,67 @@
-import { DataTypes, Model, Optional } from 'sequelize';
+// /src/models/orderItem.ts
+
+import { DataTypes, Model } from 'sequelize';
 import sequelize from '../config/dbConnect';
+import { IOrderItem, ICreateOrderItem } from '../types/orderItem.types';
 
-interface OrderItemAttributes {
-  id: string;
-  order_id?: string | null;
-  product_id?: string | null;
-  seller_id?: string | null;
-  price?: number | null;
-  quantity?: number | null;
-  subtotal?: number | null;
-  createdAt?: Date;
-  updatedAt?: Date;
+class OrderItem extends Model<IOrderItem, ICreateOrderItem> implements IOrderItem {
+  declare id: string;
+
+  declare order_id: string | null;
+  declare product_id: string | null;
+  declare seller_id: string | null;
+
+  declare price: number | null;
+  declare quantity: number | null;
+  declare subtotal: number | null;
+
+  declare readonly createdAt: Date;
+  declare readonly updatedAt: Date;
 }
 
-interface OrderItemCreationAttributes extends Optional<
-  OrderItemAttributes,
-  'id' | 'order_id' | 'product_id' | 'seller_id' | 'price' | 'quantity' | 'subtotal' | 'createdAt' | 'updatedAt'
-> {}
 
-class OrderItem extends Model<OrderItemAttributes, OrderItemCreationAttributes> implements OrderItemAttributes {
-  public id!: string;
-  public order_id!: string | null;
-  public product_id!: string | null;
-  public seller_id!: string | null;
-  public price!: number | null;
-  public quantity!: number | null;
-  public subtotal!: number | null;
-
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
-}
-
-OrderItem.init({
-  id: {
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
-    primaryKey: true,
-  },
-  order_id: {
-    type: DataTypes.UUID,
-    allowNull: true,
-  },
-  product_id: {
-    type: DataTypes.UUID,
-    allowNull: true,
-  },
-  seller_id: {
-    type: DataTypes.UUID,
-    allowNull: true,
-  },
-  price: {
-    type: DataTypes.DECIMAL(10, 2),
-    allowNull: true,
-  },
-  quantity: {
-    type: DataTypes.INTEGER,
-    allowNull: true,
-    validate: {
-      min: 0,
+OrderItem.init(
+  {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
+    },
+    order_id: {
+      type: DataTypes.UUID,
+      allowNull: true,
+    },
+    product_id: {
+      type: DataTypes.UUID,
+      allowNull: true,
+    },
+    seller_id: {
+      type: DataTypes.UUID,
+      allowNull: true,
+    },
+    price: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: true,
+    },
+    quantity: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      validate: {
+        min: 0,
+      },
+    },
+    subtotal: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: true,
     },
   },
-  subtotal: {
-    type: DataTypes.DECIMAL(10, 2),
-    allowNull: true,
-  },
-}, {
-  sequelize,
-  tableName: 'order_items',
-  timestamps: true,
-  underscored: true,
-});
+  {
+    sequelize,
+    modelName: 'order_item',
+    tableName: 'order_items',
+    timestamps: true,
+    underscored: true,
+  }
+);
 
 export default OrderItem;

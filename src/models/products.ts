@@ -13,7 +13,7 @@ class Product extends Model<IProduct, ProductCreationAttributes> implements IPro
   declare subcategory_id: string | null;
   declare product_name: string | null;
   declare description: string | null;
-  declare price: number | null;
+  declare price: number;
   declare quantity: number | null;
   declare image_url: any;
   declare is_active: boolean;

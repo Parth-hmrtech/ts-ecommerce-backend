@@ -1,35 +1,36 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config/dbConnect';
+import { IPayment } from '../types/payment.types';
 
-interface PaymentAttributes {
-  id: string;
-  order_id?: string | null;
-  buyer_id?: string | null;
-  seller_id?: string | null;
-  amount?: number | null;
-  payment_method?: string | null;
-  payment_status?: string | null;
-  transaction_id?: string | null;
-  paid_at?: Date | null;
-  createdAt?: Date;
-  updatedAt?: Date;
-}
+type IPaymentCreation = Optional<
+  IPayment,
+  | 'id'
+  | 'order_id'
+  | 'buyer_id'
+  | 'seller_id'
+  | 'amount'
+  | 'payment_method'
+  | 'payment_status'
+  | 'transaction_id'
+  | 'paid_at'
+  | 'createdAt'
+  | 'updatedAt'
+>;
 
-interface PaymentCreationAttributes extends Optional<PaymentAttributes, 'id' | 'order_id' | 'buyer_id' | 'seller_id' | 'amount' | 'payment_method' | 'payment_status' | 'transaction_id' | 'paid_at' | 'createdAt' | 'updatedAt'> {}
+class Payment extends Model<IPayment, IPaymentCreation> implements IPayment {
+  declare id: string;
+  declare order_id: string | null;
+  declare buyer_id: string | null;
+  declare seller_id: string | null;
+  declare amount: number | null;
+  declare payment_method: string | null;
+  declare payment_status: string | null;
+  declare transaction_id: string | null;
+  declare paid_at: Date | null;
 
-class Payment extends Model<PaymentAttributes, PaymentCreationAttributes> implements PaymentAttributes {
-  public id!: string;
-  public order_id!: string | null;
-  public buyer_id!: string | null;
-  public seller_id!: string | null;
-  public amount!: number | null;
-  public payment_method!: string | null;
-  public payment_status!: string | null;
-  public transaction_id!: string | null;
-  public paid_at!: Date | null;
-
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  declare readonly createdAt?: Date;
+  declare readonly updatedAt?: Date;
+  declare readonly deletedAt?: Date | null;
 }
 
 Payment.init(
@@ -76,7 +77,9 @@ Payment.init(
   {
     sequelize,
     tableName: 'payments',
+    modelName: 'Payment',
     timestamps: true,
+    paranoid: true,
     underscored: true,
   }
 );
