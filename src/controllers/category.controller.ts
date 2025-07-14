@@ -13,7 +13,7 @@ import {
   getSubCategoryByCategoryId
 } from '../service/category.service';
 
-interface AuthRequest extends Request {
+interface IAuthRequest extends Request {
   user: {
     id: string;
   };
@@ -21,8 +21,7 @@ interface AuthRequest extends Request {
 
 const createCategoryController = async (req: Request, res: Response): Promise<void> => {
   try {
-    
-    const { user } = req as AuthRequest;
+    const { user } = req as IAuthRequest;
     const categories = await createCategory({ seller_id: user.id, ...req.body });
 
     res.status(200).json({
@@ -30,18 +29,14 @@ const createCategoryController = async (req: Request, res: Response): Promise<vo
       message: 'Category created successfully!',
       data: categories
     });
- 
   } catch (error) {
- 
     throw new Error(String(error));
   }
 };
 
 const getCategoryController = async (req: Request, res: Response): Promise<void> => {
-  
   try {
-  
-    const { user } = req as AuthRequest;
+    const { user } = req as IAuthRequest;
     const categories = await getCategory({ seller_id: user.id });
 
     res.status(200).json({
@@ -49,18 +44,13 @@ const getCategoryController = async (req: Request, res: Response): Promise<void>
       message: 'Categories retrieved successfully!',
       data: categories
     });
-  
   } catch (error) {
-  
     throw new Error(String(error));
-  
   }
 };
 
 const updateCategoryController = async (req: Request, res: Response): Promise<void> => {
-  
   try {
-  
     const category = await updateCategory({ ...req.params, ...req.body });
 
     res.status(200).json({
@@ -68,18 +58,13 @@ const updateCategoryController = async (req: Request, res: Response): Promise<vo
       message: 'Category updated successfully!',
       data: category
     });
-  
   } catch (error) {
-  
     throw new Error(String(error));
-  
   }
 };
 
 const deleteCategoryController = async (req: Request, res: Response): Promise<void> => {
-  
   try {
-  
     const deleted = await deleteCategory(req.params.id);
 
     if (deleted === 0) {
@@ -87,27 +72,21 @@ const deleteCategoryController = async (req: Request, res: Response): Promise<vo
         error: true,
         message: 'Category not found!',
       });
-  
       return;
-  
     }
+
     res.status(200).json({
       error: false,
       message: 'Category deleted successfully!',
       data: deleted,
     });
-  
   } catch (error) {
-  
     throw new Error(String(error));
-  
   }
 };
 
 const fetchAllCategoryController = async (_req: Request, res: Response): Promise<void> => {
-  
   try {
-  
     const categories = await fetchAllCategory();
 
     res.status(200).json({
@@ -115,20 +94,14 @@ const fetchAllCategoryController = async (_req: Request, res: Response): Promise
       message: 'All categories retrieved successfully!',
       data: categories
     });
-  
   } catch (error) {
-  
     throw new Error(String(error));
-  
   }
 };
 
-
 const createSubCategoryController = async (req: Request, res: Response): Promise<void> => {
-  
   try {
-  
-    const { user } = req as AuthRequest;
+    const { user } = req as IAuthRequest;
     const subCategory = await createSubCategory({ seller_id: user.id, ...req.body });
 
     res.status(200).json({
@@ -136,19 +109,14 @@ const createSubCategoryController = async (req: Request, res: Response): Promise
       message: 'Subcategory created successfully',
       data: subCategory
     });
-  
   } catch (error) {
-  
     throw new Error(String(error));
-  
   }
 };
 
 const getSubCategoryController = async (req: Request, res: Response): Promise<void> => {
-  
   try {
-  
-    const { user } = req as AuthRequest;
+    const { user } = req as IAuthRequest;
     const subCategories = await getSubCategory({ id: user.id });
 
     res.status(200).json({
@@ -156,18 +124,13 @@ const getSubCategoryController = async (req: Request, res: Response): Promise<vo
       message: 'Subcategories retrieved successfully',
       data: subCategories
     });
-  
   } catch (error) {
-  
     throw new Error(String(error));
-  
   }
 };
 
 const getSubCategoryByCategoryIdController = async (req: Request, res: Response): Promise<void> => {
-  
   try {
-  
     const subCategories = await getSubCategoryByCategoryId({ category_id: req.params.categoryId });
 
     res.status(200).json({
@@ -175,18 +138,13 @@ const getSubCategoryByCategoryIdController = async (req: Request, res: Response)
       message: 'Subcategories by category retrieved successfully',
       data: subCategories
     });
-  
   } catch (error) {
-  
     throw new Error(String(error));
-  
   }
 };
 
 const updateSubCategoryController = async (req: Request, res: Response): Promise<void> => {
-  
   try {
-  
     const updatedSubCategory = await updateSubCategory({ ...req.params, ...req.body });
 
     res.status(200).json({
@@ -194,18 +152,13 @@ const updateSubCategoryController = async (req: Request, res: Response): Promise
       message: 'Subcategory updated successfully',
       data: updatedSubCategory
     });
-  
   } catch (error) {
-  
     throw new Error(String(error));
-  
   }
 };
 
 const deleteSubCategoryController = async (req: Request, res: Response): Promise<void> => {
-  
   try {
-  
     const deletedSubCategory = await deleteSubCategory({ id: req.params.id });
 
     res.status(200).json({
@@ -213,18 +166,13 @@ const deleteSubCategoryController = async (req: Request, res: Response): Promise
       message: 'Subcategory deleted successfully',
       data: deletedSubCategory
     });
-  
   } catch (error) {
-  
     throw new Error(String(error));
-  
   }
 };
 
 const fetchAllSubCategoryController = async (_req: Request, res: Response): Promise<void> => {
-  
   try {
-  
     const allSubCategories = await fetchAllSubCategory();
 
     res.status(200).json({
@@ -232,14 +180,10 @@ const fetchAllSubCategoryController = async (_req: Request, res: Response): Prom
       message: 'All subcategories retrieved successfully',
       data: allSubCategories
     });
-  
   } catch (error) {
-  
     throw new Error(String(error));
-  
   }
 };
-
 
 export {
   createCategoryController,

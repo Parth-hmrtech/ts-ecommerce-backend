@@ -9,7 +9,7 @@ import {
 } from '../service/payment.service';
 import { IPayment } from '../types/payment.types';
 
-interface AuthRequest extends Request {
+interface IAuthRequest extends Request {
   user: {
     id: string;
   };
@@ -17,7 +17,7 @@ interface AuthRequest extends Request {
 
 const getSellerPaymentsController = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { user } = req as AuthRequest;
+    const { user } = req as IAuthRequest;
     const payments: IPayment[] = await getSellerPayments(user.id);
 
     res.status(200).json({
@@ -32,7 +32,7 @@ const getSellerPaymentsController = async (req: Request, res: Response): Promise
 
 const getSellerPaymentByOrderController = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { user } = req as AuthRequest;
+    const { user } = req as IAuthRequest;
     const payment: IPayment | null = await getSellerPaymentByOrderId(user.id, req.params.orderId);
 
     res.status(200).json({
@@ -47,7 +47,7 @@ const getSellerPaymentByOrderController = async (req: Request, res: Response): P
 
 const getSellerEarningsController = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { user } = req as AuthRequest;
+    const { user } = req as IAuthRequest;
     const earnings = await getSellerEarnings(user.id);
 
     res.status(200).json({
@@ -62,7 +62,7 @@ const getSellerEarningsController = async (req: Request, res: Response): Promise
 
 const checkoutPaymentController = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { user } = req as AuthRequest;
+    const { user } = req as IAuthRequest;
     const result = await checkoutPayment(user.id, req.body);
 
     res.status(200).json({
@@ -91,7 +91,7 @@ const verifyPaymentController = async (req: Request, res: Response): Promise<voi
 
 const getBuyerPaymentsController = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { user } = req as AuthRequest;
+    const { user } = req as IAuthRequest;
     const payments = await getPaymentStatus(user.id);
 
     res.status(200).json({

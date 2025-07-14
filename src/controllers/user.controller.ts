@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { findUser, updateUser, resetUserPassword } from '../service/user.service';
 import { uploadFile } from '../utils/uploadImage';
 
-interface AuthRequest extends Request {
+interface IAuthRequest extends Request {
   user?: {
     id: string;
   };
@@ -11,7 +11,7 @@ interface AuthRequest extends Request {
 
 const getUserController = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { user } = req as AuthRequest;
+    const { user } = req as IAuthRequest;
 
     if (!user?.id) {
       res.status(401).json({
@@ -35,7 +35,7 @@ const getUserController = async (req: Request, res: Response): Promise<void> => 
 
 const updateUserController = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { user, file } = req as AuthRequest;
+    const { user, file } = req as IAuthRequest;
     const userData = { ...req.body };
 
     if (file) {
@@ -65,7 +65,7 @@ const updateUserController = async (req: Request, res: Response): Promise<void> 
 
 const resetPasswordController = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { user } = req as AuthRequest;
+    const { user } = req as IAuthRequest;
     const { oldPassword, newPassword } = req.body;
 
     if (!oldPassword || !newPassword) {

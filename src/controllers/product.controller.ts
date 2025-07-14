@@ -13,7 +13,7 @@ import {
 } from '../service/products.service';
 import { uploadFile } from '../utils/uploadImage';
 
-interface AuthRequest extends Request {
+interface IAuthRequest extends Request {
   user: {
     id: string;
   };
@@ -21,7 +21,7 @@ interface AuthRequest extends Request {
 
 const createProductController = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { user } = req as AuthRequest;
+    const { user } = req as IAuthRequest;
     const createdProduct = await createProduct({ seller_id: user.id, ...req.body });
 
     res.status(200).json({
@@ -36,7 +36,7 @@ const createProductController = async (req: Request, res: Response): Promise<voi
 
 const imageProductController = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { user } = req as AuthRequest;
+    const { user } = req as IAuthRequest;
     const { product_id } = req.body;
     const image_urls: any[] = [];
 
@@ -59,7 +59,7 @@ const imageProductController = async (req: Request, res: Response): Promise<void
 
 const getProductController = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { user } = req as AuthRequest;
+    const { user } = req as IAuthRequest;
     const products = await getProduct(user);
     res.status(200).json({
       error: false,
@@ -135,7 +135,7 @@ const fatchAllProductController = async (_req: Request, res: Response): Promise<
 
 const createWishlistController = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { user } = req as AuthRequest;
+    const { user } = req as IAuthRequest;
     const wishlist = await createWishlist({ buyer_id: user.id, ...req.body });
     res.status(200).json({
       error: false,
@@ -149,7 +149,7 @@ const createWishlistController = async (req: Request, res: Response): Promise<vo
 
 const getWishlistController = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { user } = req as AuthRequest;
+    const { user } = req as IAuthRequest;
     const wishlistItem = await getWishlist(user.id);
     res.status(200).json({
       error: false,

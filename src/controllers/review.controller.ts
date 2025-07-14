@@ -8,7 +8,7 @@ import {
   updateReviewByBuyer,
 } from '../service/review.service';
 
-interface AuthRequest extends Request {
+interface IAuthRequest extends Request {
   user: {
     id: string;
   };
@@ -30,7 +30,7 @@ const createReviewFromOrderController = async (req: Request, res: Response): Pro
 
 const getAllSellerReviewsController = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { user } = req as AuthRequest;
+    const { user } = req as IAuthRequest;
     const reviews = await getSellerReviews({ seller_id: user.id });
 
     res.status(200).json({
@@ -59,7 +59,7 @@ const getProductReviewsController = async (req: Request, res: Response): Promise
 
 const deleteOwnReviewController = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { user } = req as AuthRequest;
+    const { user } = req as IAuthRequest;
     const deleted = await deleteReviewByBuyer({
       reviewId: req.params.id,
       buyerId: user.id,
@@ -77,7 +77,7 @@ const deleteOwnReviewController = async (req: Request, res: Response): Promise<v
 
 const deleteSellerReviewController = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { user } = req as AuthRequest;
+    const { user } = req as IAuthRequest;
     const deleted = await deleteReviewBySeller(req.params.reviewId, user.id);
 
     res.status(200).json({
@@ -92,7 +92,7 @@ const deleteSellerReviewController = async (req: Request, res: Response): Promis
 
 const updateOwnReviewController = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { user } = req as AuthRequest;
+    const { user } = req as IAuthRequest;
     const updated = await updateReviewByBuyer(req.params.id, user.id, req.body);
 
     res.status(200).json({

@@ -13,7 +13,7 @@ import {
   deleteOrderItem
 } from '../service/order.service';
 
-interface AuthRequest extends Request {
+interface IAuthRequest extends Request {
   user: {
     id: string;
     [key: string]: any;
@@ -22,7 +22,7 @@ interface AuthRequest extends Request {
 
 const createBuyerOrderController = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { user } = req as AuthRequest;
+    const { user } = req as IAuthRequest;
     const products = req.body.products;
     const orderDetails = await calculateOrderDetails(products);
     const order = await createOrder({
@@ -43,7 +43,7 @@ const createBuyerOrderController = async (req: Request, res: Response): Promise<
 
 const getBuyerOrdersController = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { user } = req as AuthRequest;
+    const { user } = req as IAuthRequest;
     const orders = await getBuyerOrders({ buyerId: user.id });
 
     res.status(200).json({
@@ -107,7 +107,7 @@ const updateBuyerOrderAddressController = async (req: Request, res: Response): P
 
 const getSellerOrdersController = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { user } = req as AuthRequest;
+    const { user } = req as IAuthRequest;
     const orders = await getSellerOrders({ sellerId: user.id });
 
     res.status(200).json({
