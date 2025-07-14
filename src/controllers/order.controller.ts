@@ -26,7 +26,6 @@ const createBuyerOrderController: RequestHandler = async (req, res): Promise<voi
   try {
     const products = authReq.body.products;
     const orderDetails = await calculateOrderDetails(products);
-        console.log(orderDetails);
 
     const order = await createOrder({
       buyer_id: authReq.user.id,

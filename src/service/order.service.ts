@@ -34,8 +34,6 @@ interface CreateOrderInput {
       },
       { transaction: t }
     );
-    console.log(orderRecord);
-    console.log("Order ID:", orderRecord.id); // or orderRecord.get("id")
     
     const orderItemsData: ICreateOrderItem[] = [];
 
@@ -58,9 +56,7 @@ interface CreateOrderInput {
 
     if (orderItemsData.length === 0) {
       throw new Error('No order items prepared for creation.');
-    }
-    console.log(orderItemsData);
-    
+    }    
     await order_items.bulkCreate(orderItemsData, {
       transaction: t,
       validate: true,
