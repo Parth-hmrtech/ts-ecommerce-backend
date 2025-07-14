@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import { Transporter } from 'nodemailer';
 
 dotenv.config();
-dotenv.config({ path: '../.env' }); // Optional: only if running from nested dir
+dotenv.config({ path: '../.env' });
 
 const EMAIL_USER = process.env.EMAIL_USER;
 const EMAIL_PASS = process.env.EMAIL_PASS;
@@ -13,7 +13,6 @@ if (!EMAIL_USER || !EMAIL_PASS) {
   throw new Error('EMAIL_USER or EMAIL_PASS is not defined in the environment variables.');
 }
 
-// Create transporter
 const transporter: Transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -22,7 +21,6 @@ const transporter: Transporter = nodemailer.createTransport({
   },
 });
 
-// Send email when order is accepted
 const sendOrderAcceptedEmail = async (toEmail: string, orderId: string): Promise<void> => {
   const mailOptions = {
     from: EMAIL_USER,

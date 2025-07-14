@@ -72,7 +72,6 @@ Payment.init(
       type: DataTypes.DATE,
       allowNull: true,
     },
-    // 👇 add these explicitly to override default field names
     created_at: {
       type: DataTypes.DATE,
       allowNull: false,

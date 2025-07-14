@@ -1,4 +1,3 @@
-// types/order.types.ts
 
 export interface IOrder {
   id: string;
@@ -12,5 +11,4 @@ export interface IOrder {
   updatedAt?: Date;
 }
 
-// ✅ Correct: make all fields optional *except* the ones needed to create an order
 export type ICreateOrder = Omit<IOrder, 'id' | 'createdAt' | 'updatedAt'>;

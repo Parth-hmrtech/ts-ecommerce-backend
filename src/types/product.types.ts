@@ -7,7 +7,7 @@ export interface IProduct {
   description?: string | null;
   price?: number | null;
   quantity?: number | null;
-  image_url?: any; // can be typed further if needed
+  image_url?: any; 
   is_active?: boolean;
   createdAt?: Date;
   updatedAt?: Date;

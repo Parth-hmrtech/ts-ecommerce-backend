@@ -4,9 +4,9 @@ import Category from './categories';
 import SubCategory from './subCategories';
 import { IProduct, ICreateProduct } from '../types/product.types';
 
-interface ProductCreationAttributes extends Optional<IProduct, keyof ICreateProduct> {}
+interface IProductCreation extends Optional<IProduct, keyof ICreateProduct> {}
 
-class Product extends Model<IProduct, ProductCreationAttributes> implements IProduct {
+class Product extends Model<IProduct, IProductCreation> implements IProduct {
   declare id: string;
   declare seller_id: string | null;
   declare category_id: string | null;

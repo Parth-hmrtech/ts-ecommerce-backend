@@ -1,5 +1,3 @@
-// /src/types/category.types.ts
-
 export interface ICategory {
   id: string;
   seller_id: string;

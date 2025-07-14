@@ -1,4 +1,3 @@
-// IOrderItem.ts
 export interface IOrderItem {
   id: string;
   order_id: string | null;

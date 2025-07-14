@@ -59,7 +59,6 @@ Order.init(
   }
 );
 
-// Associations
 Order.hasMany(orderItems, { foreignKey: 'order_id' });
 orderItems.belongsTo(Order, { foreignKey: 'order_id' });
 

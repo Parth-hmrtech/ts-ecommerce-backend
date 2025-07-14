@@ -1,4 +1,3 @@
-// /src/models/orderItem.ts
 
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../config/dbConnect';
