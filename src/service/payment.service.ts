@@ -5,16 +5,12 @@ const getSellerPayments = async (sellerId: string): Promise<IPayment[]> => {
   return await payment.findAll({ where: { seller_id: sellerId } });
 };
 
-const getSellerPaymentByOrderId = async (
-  sellerId: string,
-  orderId: string
-): Promise<IPayment | null> => {
+const getSellerPaymentByOrderId = async (sellerId: string, orderId: string): Promise<IPayment | null> => {
   return await payment.findOne({ where: { seller_id: sellerId, order_id: orderId } });
 };
 
-const getSellerEarnings = async (
-  sellerId: string
-): Promise<{ total_earnings: number; total_orders: number }> => {
+const getSellerEarnings = async (sellerId: string): Promise<{ total_earnings: number; total_orders: number }> => {
+
   const payments = await payment.findAll({
     where: {
       seller_id: sellerId,
@@ -34,10 +30,8 @@ const getSellerEarnings = async (
   };
 };
 
-const checkoutPayment = async (
-  buyerId: string,
-  payload: Omit<IPaymentCreation, 'buyer_id' | 'payment_status'>
-): Promise<IPayment> => {
+const checkoutPayment = async (buyerId: string, payload: Omit<IPaymentCreation, 'buyer_id' | 'payment_status'>): Promise<IPayment> => {
+
   const newPayment = await payment.create({
     buyer_id: buyerId,
     payment_status: 'pending',
@@ -47,13 +41,8 @@ const checkoutPayment = async (
   return newPayment;
 };
 
-const verifyPayment = async ({
-  transaction_id,
-  status
-}: {
-  transaction_id: string;
-  status: string;
-}): Promise<boolean> => {
+const verifyPayment = async ({ transaction_id, status }: { transaction_id: string; status: string; }): Promise<boolean> => {
+
   const updated = await payment.update(
     { payment_status: status },
     { where: { transaction_id } }

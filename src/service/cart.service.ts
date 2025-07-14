@@ -35,36 +35,42 @@ const deleteCart = async (cartId: string): Promise<number> => {
   return deletedCount;
 };
 
-const deleteBuyerCart = async (buyerId: string): Promise<{
-  success: boolean;
-  message: string;
-  deletedCount: number;
-}> => {
+const deleteBuyerCart = async (buyerId: string): Promise<{success: boolean; message: string; deletedCount: number;}> => {
+  
   try {
+  
     const deletedCount = await Cart.destroy({
       where: { buyer_id: buyerId },
     });
 
     if (deletedCount > 0) {
+  
       return {
         success: true,
         message: 'Buyer cart deleted successfully.',
         deletedCount,
       };
+  
     } else {
+  
       return {
         success: false,
         message: 'No cart items found for this buyer.',
         deletedCount: 0,
       };
+  
     }
+  
   } catch (error) {
+  
     console.error('Service Error in deleteBuyerCart:', error);
+  
     return {
       success: false,
       message: 'Error deleting buyer cart.',
       deletedCount: 0,
     };
+  
   }
 };
 

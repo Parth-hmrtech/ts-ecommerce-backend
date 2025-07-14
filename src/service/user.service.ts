@@ -33,16 +33,23 @@ const updateUser = async ({ id, data, }: { id: string; data: Partial<ICreateUser
 const resetUserPassword = async ({ userId, oldPassword, newPassword, }: { userId: string; oldPassword: string; newPassword: string; }): Promise<{ success?: boolean; message?: string } | Omit<IUser, 'password_hash'>> => {
 
     const user = await User.unscoped().findByPk(userId);
+   
     if (!user) {
         return { message: 'User not found' };
     }
+   
     const isValid = await user.validPassword(oldPassword);
+   
     if (!isValid) {
         return { message: 'Old password is incorrect' };
     }
+   
     user.password_hash = await bcrypt.hash(newPassword, 10);
+   
     await user.save();
+   
     const { password_hash, ...safeUser } = user.get({ plain: true });
+   
     return safeUser;
 };
 
