@@ -9,15 +9,12 @@ import {
 } from '../service/payment.service';
 import { IPayment } from '../types/payment.types';
 
-// Extend Express Request to include user
 interface AuthenticatedRequest extends Request {
   user?: {
     id: string;
-    // add other user fields if needed
   };
 }
 
-// GET: All seller payments
 const getSellerPaymentsController = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
     const payments: IPayment[] = await getSellerPayments(req.user!.id);
@@ -36,7 +33,6 @@ const getSellerPaymentsController = async (req: AuthenticatedRequest, res: Respo
   }
 };
 
-// GET: Seller payment by order ID
 const getSellerPaymentByOrderController = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
     const payment: IPayment | null = await getSellerPaymentByOrderId(req.user!.id, req.params.orderId);
@@ -55,7 +51,6 @@ const getSellerPaymentByOrderController = async (req: AuthenticatedRequest, res:
   }
 };
 
-// GET: Seller earnings
 const getSellerEarningsController = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
     const earnings = await getSellerEarnings(req.user!.id);
@@ -74,7 +69,6 @@ const getSellerEarningsController = async (req: AuthenticatedRequest, res: Respo
   }
 };
 
-// POST: Checkout payment
 const checkoutPaymentController = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
     const result = await checkoutPayment(req.user!.id, req.body);
@@ -93,7 +87,6 @@ const checkoutPaymentController = async (req: AuthenticatedRequest, res: Respons
   }
 };
 
-// POST: Verify payment
 const verifyPaymentController = async (req: Request, res: Response): Promise<void> => {
   try {
     const result = await verifyPayment(req.body);
@@ -112,7 +105,6 @@ const verifyPaymentController = async (req: Request, res: Response): Promise<voi
   }
 };
 
-// GET: Buyer payment status
 const getBuyerPaymentsController = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
     const buyerId = req.user!.id;

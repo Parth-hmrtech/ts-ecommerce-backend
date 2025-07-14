@@ -1,12 +1,10 @@
 import payment from '../models/payment';
 import { IPayment, IPaymentCreation } from '../types/payment.types';
 
-// Get all seller payments
 const getSellerPayments = async (sellerId: string): Promise<IPayment[]> => {
   return await payment.findAll({ where: { seller_id: sellerId } });
 };
 
-// Get single seller payment by order ID
 const getSellerPaymentByOrderId = async (
   sellerId: string,
   orderId: string
@@ -14,7 +12,6 @@ const getSellerPaymentByOrderId = async (
   return await payment.findOne({ where: { seller_id: sellerId, order_id: orderId } });
 };
 
-// Get total earnings for a seller
 const getSellerEarnings = async (
   sellerId: string
 ): Promise<{ total_earnings: number; total_orders: number }> => {
@@ -37,7 +34,6 @@ const getSellerEarnings = async (
   };
 };
 
-// Create a new payment (checkout)
 const checkoutPayment = async (
   buyerId: string,
   payload: Omit<IPaymentCreation, 'buyer_id' | 'payment_status'>
@@ -51,7 +47,6 @@ const checkoutPayment = async (
   return newPayment;
 };
 
-// Update payment status by transaction_id
 const verifyPayment = async ({
   transaction_id,
   status
@@ -67,7 +62,6 @@ const verifyPayment = async ({
   return updated[0] > 0;
 };
 
-// Get all payments for a buyer
 const getPaymentStatus = async (buyerId: string): Promise<IPayment[]> => {
   return await payment.findAll({
     where: {
