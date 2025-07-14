@@ -1,4 +1,4 @@
-import { Request, Response, RequestHandler } from 'express';
+import { Request, Response } from 'express';
 import {
   createOrder,
   getSellerOrders,
@@ -13,61 +13,50 @@ import {
   deleteOrderItem
 } from '../service/order.service';
 
-export interface AuthenticatedRequest extends Request {
+interface AuthRequest extends Request {
   user: {
     id: string;
     [key: string]: any;
   };
 }
 
-const createBuyerOrderController: RequestHandler = async (req, res): Promise<void> => {
-  const authReq = req as AuthenticatedRequest;
-
+const createBuyerOrderController = async (req: Request, res: Response): Promise<void> => {
   try {
-    const products = authReq.body.products;
+    const { user } = req as AuthRequest;
+    const products = req.body.products;
     const orderDetails = await calculateOrderDetails(products);
-
     const order = await createOrder({
-      buyer_id: authReq.user.id,
+      buyer_id: user.id,
       ...orderDetails,
-      ...authReq.body
+      ...req.body
     });
-    
+
     res.status(200).json({
       error: false,
       message: 'Order created successfully!',
       data: order
     });
-  } catch (error: any) {
-    res.status(500).json({
-      error: true,
-      message: 'Failed to create order.',
-      details: error.message
-    });
+  } catch (error) {
+    throw new Error(String(error));
   }
 };
 
-const getBuyerOrdersController: RequestHandler = async (req, res): Promise<void> => {
-  const authReq = req as AuthenticatedRequest;
-
+const getBuyerOrdersController = async (req: Request, res: Response): Promise<void> => {
   try {
-    const orders = await getBuyerOrders({ buyerId: authReq.user.id });
+    const { user } = req as AuthRequest;
+    const orders = await getBuyerOrders({ buyerId: user.id });
 
     res.status(200).json({
       error: false,
       message: 'Orders retrieved successfully!',
       data: orders
     });
-  } catch (error: any) {
-    res.status(500).json({
-      error: true,
-      message: 'Failed to retrieve orders.',
-      details: error.message
-    });
+  } catch (error) {
+    throw new Error(String(error));
   }
 };
 
-const getBuyerOrderByIdController: RequestHandler = async (req, res): Promise<void> => {
+const getBuyerOrderByIdController = async (req: Request, res: Response): Promise<void> => {
   try {
     const order = await getBuyerOrderById(req.params.id);
 
@@ -76,16 +65,12 @@ const getBuyerOrderByIdController: RequestHandler = async (req, res): Promise<vo
       message: 'Order retrieved by ID successfully!',
       data: order
     });
-  } catch (error: any) {
-    res.status(500).json({
-      error: true,
-      message: 'Failed to retrieve order by ID.',
-      details: error.message
-    });
+  } catch (error) {
+    throw new Error(String(error));
   }
 };
 
-const cancelBuyerOrderController: RequestHandler = async (req, res): Promise<void> => {
+const cancelBuyerOrderController = async (req: Request, res: Response): Promise<void> => {
   try {
     const cancelledOrder = await cancelBuyerOrder(req.params.id);
     const deletedItems = await deleteOrderItem(req.params.id);
@@ -98,16 +83,12 @@ const cancelBuyerOrderController: RequestHandler = async (req, res): Promise<voi
         deletedItems
       }
     });
-  } catch (error: any) {
-    res.status(500).json({
-      error: true,
-      message: 'Failed to cancel order.',
-      details: error.message
-    });
+  } catch (error) {
+    throw new Error(String(error));
   }
 };
 
-const updateBuyerOrderAddressController: RequestHandler = async (req, res): Promise<void> => {
+const updateBuyerOrderAddressController = async (req: Request, res: Response): Promise<void> => {
   try {
     const updatedAddress = await updateBuyerOrderAddress({
       id: req.params.id,
@@ -119,36 +100,27 @@ const updateBuyerOrderAddressController: RequestHandler = async (req, res): Prom
       message: 'Order address updated successfully!',
       data: updatedAddress
     });
-  } catch (error: any) {
-    res.status(500).json({
-      error: true,
-      message: 'Failed to update address.',
-      details: error.message
-    });
+  } catch (error) {
+    throw new Error(String(error));
   }
 };
 
-const getSellerOrdersController: RequestHandler = async (req, res): Promise<void> => {
-  const authReq = req as AuthenticatedRequest;
-
+const getSellerOrdersController = async (req: Request, res: Response): Promise<void> => {
   try {
-    const orders = await getSellerOrders({ sellerId: authReq.user.id });
+    const { user } = req as AuthRequest;
+    const orders = await getSellerOrders({ sellerId: user.id });
 
     res.status(200).json({
       error: false,
       message: 'Seller orders retrieved successfully!',
       data: orders
     });
-  } catch (error: any) {
-    res.status(500).json({
-      error: true,
-      message: 'Failed to retrieve seller orders.',
-      details: error.message
-    });
+  } catch (error) {
+    throw new Error(String(error));
   }
 };
 
-const getSellerOrderByIdController: RequestHandler = async (req, res): Promise<void> => {
+const getSellerOrderByIdController = async (req: Request, res: Response): Promise<void> => {
   try {
     const order = await getSellerOrderById({ orderId: req.params.id });
 
@@ -157,23 +129,18 @@ const getSellerOrderByIdController: RequestHandler = async (req, res): Promise<v
       message: 'Order retrieved by ID successfully!',
       data: order
     });
-  } catch (error: any) {
-    res.status(500).json({
-      error: true,
-      message: 'Failed to retrieve order by ID.',
-      details: error.message
-    });
+  } catch (error) {
+    throw new Error(String(error));
   }
 };
 
-const updateOrderStatusAndNotifyController: RequestHandler = async (req, res): Promise<void> => {
+const updateOrderStatusAndNotifyController = async (req: Request, res: Response): Promise<void> => {
   try {
     const orderId = req.params.id;
     const newStatus: string = req.body.status;
-
     const updatedOrderStatus = await updateOrderStatus(orderId, newStatus);
-    let emailResult = null;
 
+    let emailResult = null;
     if (newStatus === 'accepted') {
       emailResult = await sendOrderAcceptedNotification(orderId);
     }
@@ -187,12 +154,8 @@ const updateOrderStatusAndNotifyController: RequestHandler = async (req, res): P
         ...(emailResult && { email: emailResult })
       }
     });
-  } catch (error: any) {
-    res.status(500).json({
-      error: true,
-      message: 'Failed to update order status.',
-      details: error.message
-    });
+  } catch (error) {
+    throw new Error(String(error));
   }
 };
 

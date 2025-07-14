@@ -2,18 +2,18 @@ import { Request, Response } from 'express';
 import { findUser, updateUser, resetUserPassword } from '../service/user.service';
 import { uploadFile } from '../utils/uploadImage';
 
-interface AuthenticatedRequest extends Request {
+interface AuthRequest extends Request {
   user?: {
     id: string;
   };
   file?: Express.Multer.File;
 }
 
-const getUserController = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+const getUserController = async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = req.user?.id;
+    const { user } = req as AuthRequest;
 
-    if (!userId) {
+    if (!user?.id) {
       res.status(401).json({
         error: true,
         message: 'Unauthorized: User not found',
@@ -21,34 +21,29 @@ const getUserController = async (req: AuthenticatedRequest, res: Response): Prom
       return;
     }
 
-    const user = await findUser(userId);
+    const foundUser = await findUser(user.id);
 
     res.status(200).json({
       error: false,
       message: 'User fetched successfully!',
-      data: { user },
+      data: { user: foundUser },
     });
-  } catch (error: any) {
-    console.error('Get user error:', error);
-    res.status(500).json({
-      error: true,
-      message: error.message || 'Failed to fetch user',
-    });
+  } catch (error) {
+    throw new Error(String(error));
   }
 };
 
-const updateUserController = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+const updateUserController = async (req: Request, res: Response): Promise<void> => {
   try {
+    const { user, file } = req as AuthRequest;
     const userData = { ...req.body };
 
-    if (req.file) {
-      const imageUrl = await uploadFile(req.file.path);
+    if (file) {
+      const imageUrl = await uploadFile(file.path);
       userData.image_url = imageUrl;
     }
 
-    const userId = req.user?.id;
-
-    if (!userId) {
+    if (!user?.id) {
       res.status(401).json({
         error: true,
         message: 'Unauthorized: User ID missing',
@@ -56,24 +51,21 @@ const updateUserController = async (req: AuthenticatedRequest, res: Response): P
       return;
     }
 
-    const updated = await updateUser({ id: userId, data: userData });
+    const updated = await updateUser({ id: user.id, data: userData });
 
     res.status(200).json({
       error: false,
       message: 'Update successful',
       data: updated,
     });
-  } catch (error: any) {
-    console.error('Update user error:', error);
-    res.status(500).json({
-      error: true,
-      message: error.message || 'Something went wrong while updating the profile',
-    });
+  } catch (error) {
+    throw new Error(String(error));
   }
 };
 
-const resetPasswordController = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+const resetPasswordController = async (req: Request, res: Response): Promise<void> => {
   try {
+    const { user } = req as AuthRequest;
     const { oldPassword, newPassword } = req.body;
 
     if (!oldPassword || !newPassword) {
@@ -85,7 +77,7 @@ const resetPasswordController = async (req: AuthenticatedRequest, res: Response)
     }
 
     const result = await resetUserPassword({
-      userId: req.user?.id!,
+      userId: user?.id!,
       oldPassword,
       newPassword,
     });
@@ -95,12 +87,8 @@ const resetPasswordController = async (req: AuthenticatedRequest, res: Response)
       message: 'Password reset successful',
       data: result,
     });
-  } catch (error: any) {
-    console.error('Reset password error:', error);
-    res.status(500).json({
-      error: true,
-      message: error.message || 'Something went wrong while resetting the password',
-    });
+  } catch (error) {
+    throw new Error(String(error));
   }
 };
 

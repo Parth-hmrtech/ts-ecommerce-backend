@@ -20,23 +20,24 @@ interface AuthRequest extends Request {
 }
 
 const createProductController = async (req: Request, res: Response): Promise<void> => {
-  const authReq = req as AuthRequest;
   try {
-    const createdProduct = await createProduct({ seller_id: authReq.user.id, ...authReq.body });
+    const { user } = req as AuthRequest;
+    const createdProduct = await createProduct({ seller_id: user.id, ...req.body });
+
     res.status(200).json({
       error: false,
       message: 'Product created successfully!',
       data: createdProduct,
     });
-  } catch (error: any) {
-    res.status(500).json({ error: true, message: error.message });
+  } catch (error) {
+    throw new Error(String(error));
   }
 };
 
 const imageProductController = async (req: Request, res: Response): Promise<void> => {
-  const authReq = req as AuthRequest;
   try {
-    const { product_id } = authReq.body;
+    const { user } = req as AuthRequest;
+    const { product_id } = req.body;
     const image_urls: any[] = [];
 
     for (const file of req.files as Express.Multer.File[]) {
@@ -51,23 +52,22 @@ const imageProductController = async (req: Request, res: Response): Promise<void
       updated: updateResult,
       data: image_urls,
     });
-  } catch (error: any) {
-    console.error('Error uploading images:', error);
-    res.status(500).json({ error: true, message: error.message });
+  } catch (error) {
+    throw new Error(String(error));
   }
 };
 
 const getProductController = async (req: Request, res: Response): Promise<void> => {
-  const authReq = req as AuthRequest;
   try {
-    const products = await getProduct(authReq.user);
+    const { user } = req as AuthRequest;
+    const products = await getProduct(user);
     res.status(200).json({
       error: false,
       message: 'Products retrieved successfully!',
       data: products,
     });
-  } catch (error: any) {
-    res.status(500).json({ error: true, message: error.message });
+  } catch (error) {
+    throw new Error(String(error));
   }
 };
 
@@ -89,12 +89,8 @@ const getProductByIdController = async (req: Request, res: Response): Promise<vo
       message: 'Product retrieved successfully!',
       data: product,
     });
-  } catch (error: any) {
-    console.error('Error fetching product by ID:', error);
-    res.status(500).json({
-      error: true,
-      message: 'Internal Server Error',
-    });
+  } catch (error) {
+    throw new Error(String(error));
   }
 };
 
@@ -106,8 +102,8 @@ const updateProductController = async (req: Request, res: Response): Promise<voi
       message: 'Product updated successfully!',
       data: updatedProduct,
     });
-  } catch (error: any) {
-    res.status(500).json({ error: true, message: error.message });
+  } catch (error) {
+    throw new Error(String(error));
   }
 };
 
@@ -119,8 +115,8 @@ const deleteProductController = async (req: Request, res: Response): Promise<voi
       message: 'Product deleted successfully!',
       data: deletedProduct,
     });
-  } catch (error: any) {
-    res.status(500).json({ error: true, message: error.message });
+  } catch (error) {
+    throw new Error(String(error));
   }
 };
 
@@ -132,36 +128,36 @@ const fatchAllProductController = async (_req: Request, res: Response): Promise<
       message: 'All products retrieved successfully!',
       data: products,
     });
-  } catch (error: any) {
-    res.status(500).json({ error: true, message: error.message });
+  } catch (error) {
+    throw new Error(String(error));
   }
 };
 
 const createWishlistController = async (req: Request, res: Response): Promise<void> => {
-  const authReq = req as AuthRequest;
   try {
-    const wishlist = await createWishlist({ buyer_id: authReq.user.id, ...authReq.body });
+    const { user } = req as AuthRequest;
+    const wishlist = await createWishlist({ buyer_id: user.id, ...req.body });
     res.status(200).json({
       error: false,
       message: 'Wishlist created successfully!',
       data: wishlist,
     });
-  } catch (error: any) {
-    res.status(500).json({ error: true, message: error.message });
+  } catch (error) {
+    throw new Error(String(error));
   }
 };
 
 const getWishlistController = async (req: Request, res: Response): Promise<void> => {
-  const authReq = req as AuthRequest;
   try {
-    const wishlistItem = await getWishlist(authReq.user.id);
+    const { user } = req as AuthRequest;
+    const wishlistItem = await getWishlist(user.id);
     res.status(200).json({
       error: false,
       message: 'Wishlist retrieved successfully!',
       data: wishlistItem,
     });
-  } catch (error: any) {
-    res.status(500).json({ error: true, message: error.message });
+  } catch (error) {
+    throw new Error(String(error));
   }
 };
 
@@ -173,8 +169,8 @@ const deleteWishlistController = async (req: Request, res: Response): Promise<vo
       message: 'Wishlist deleted successfully!',
       data: isDeleted,
     });
-  } catch (error: any) {
-    res.status(500).json({ error: true, message: error.message });
+  } catch (error) {
+    throw new Error(String(error));
   }
 };
 

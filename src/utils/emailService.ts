@@ -1,9 +1,8 @@
-// src/utils/emailService.ts
 import nodemailer, { Transporter } from 'nodemailer';
 import dotenv from 'dotenv';
 
 dotenv.config();
-dotenv.config({ path: '../.env' }); // optional if already configured at root
+dotenv.config({ path: '../.env' }); 
 
 const EMAIL_USER = process.env.EMAIL_USER;
 const EMAIL_PASS = process.env.EMAIL_PASS;

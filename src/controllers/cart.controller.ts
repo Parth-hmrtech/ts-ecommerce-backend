@@ -6,7 +6,6 @@ import {
   updateCart,
   deleteBuyerCart,
 } from '../service/cart.service';
-import { ICreateCartInput } from '../types/cart.types';
 
 interface AuthRequest extends Request {
   user: {
@@ -29,11 +28,11 @@ const createCartController = async (req: Request, res: Response): Promise<void> 
       message: 'Cart created successfully!',
       data: cart,
     });
-  } catch (error: any) {
-    res.status(500).json({
-      error: true,
-      message: error.message || 'Failed to create cart',
-    });
+
+  } catch (error) {
+    
+    throw new Error(String(error));
+  
   }
 };
 
@@ -48,11 +47,11 @@ const getCartController = async (req: Request, res: Response): Promise<void> => 
       message: 'Cart retrieved successfully!',
       data: cartItems,
     });
-  } catch (error: any) {
-    res.status(500).json({
-      error: true,
-      message: error.message || 'Failed to get cart',
-    });
+  
+  } catch (error) {
+    
+    throw new Error(String(error));
+  
   }
 };
 
@@ -68,16 +67,17 @@ const updateCartController = async (req: Request, res: Response): Promise<void> 
       message: 'Cart updated successfully!',
       data: updatedCartItems,
     });
-  } catch (error: any) {
-    res.status(500).json({
-      error: true,
-      message: error.message || 'Failed to update cart',
-    });
+  
+  } catch (error) {
+  
+    throw new Error(String(error));
+  
   }
 };
 
 const deleteCartController = async (req: Request, res: Response): Promise<void> => {
   try {
+   
     const deletedCart = await deleteCart(req.params.id);
 
     res.status(200).json({
@@ -85,16 +85,18 @@ const deleteCartController = async (req: Request, res: Response): Promise<void> 
       message: 'Cart deleted successfully!',
       data: deletedCart,
     });
-  } catch (error: any) {
-    res.status(500).json({
-      error: true,
-      message: error.message || 'Failed to delete cart',
-    });
+  
+  } catch (error) {
+  
+    throw new Error(String(error));
+  
   }
 };
 
 const deleteBuyerCartController = async (req: Request, res: Response): Promise<void> => {
+  
   try {
+  
     const result = await deleteBuyerCart((req as AuthRequest).user.id);
 
     res.status(200).json({
@@ -102,12 +104,11 @@ const deleteBuyerCartController = async (req: Request, res: Response): Promise<v
       message: result.message,
       deletedCount: result.deletedCount,
     });
-  } catch (error: any) {
-    console.error('Error deleting buyer cart:', error);
-    res.status(500).json({
-      error: true,
-      message: 'Failed to delete buyer’s cart.',
-    });
+  
+  } catch (error) {
+  
+    throw new Error(String(error));
+  
   }
 };
 
