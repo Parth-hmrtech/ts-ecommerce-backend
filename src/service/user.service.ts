@@ -10,7 +10,7 @@ const findUser = async (userId: string): Promise<Omit<IUser, 'password_hash'> | 
 
     });
 
-    return user?.get({ plain: true }) ?? null;
+return user;
 };
 
 const updateUser = async ({ id, data, }: { id: string; data: Partial<ICreateUser>; }): Promise<Omit<IUser, 'password_hash'> | null> => {
@@ -25,7 +25,7 @@ const updateUser = async ({ id, data, }: { id: string; data: Partial<ICreateUser
             attributes: { exclude: ['password_hash'] },
 
         });
-        return updatedUser?.get({ plain: true }) ?? null;
+        return updatedUser;
     }
     return null;
 };

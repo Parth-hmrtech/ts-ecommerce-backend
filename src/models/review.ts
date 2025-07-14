@@ -1,11 +1,9 @@
+// src/models/review.ts
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config/dbConnect';
 import { IReview } from '../types/review.types';
 
-interface ReviewCreationAttributes extends Optional<
-  IReview,
-  'id' | 'order_id' | 'product_id' | 'seller_id' | 'buyer_id' | 'rating' | 'comment'
-> {}
+type ReviewCreationAttributes = Partial<Omit<IReview, 'id'>>;
 
 class Review extends Model<IReview, ReviewCreationAttributes> implements IReview {
   declare id: string;
@@ -15,9 +13,8 @@ class Review extends Model<IReview, ReviewCreationAttributes> implements IReview
   declare buyer_id: string | null;
   declare rating: number | null;
   declare comment: string | null;
-
-  declare readonly createdAt: Date;
-  declare readonly updatedAt: Date;
+  declare created_at: Date | undefined;
+  declare updated_at: Date | undefined;
 }
 
 Review.init(
@@ -55,12 +52,20 @@ Review.init(
       type: DataTypes.TEXT,
       allowNull: true,
     },
+    created_at: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
+    updated_at: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
   },
   {
     sequelize,
+    modelName: 'Review',
     tableName: 'reviews',
-    timestamps: true,
-    underscored: true,
+    timestamps: false, // ⛔️ disables Sequelize automatic createdAt/updatedAt
   }
 );
 

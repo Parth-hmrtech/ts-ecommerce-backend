@@ -8,8 +8,8 @@ export interface IPayment {
   payment_status?: string | null;
   transaction_id?: string | null;
   paid_at?: Date | null;
-  createdAt?: Date;
-  updatedAt?: Date;
+  created_at?: Date;
+  updated_at?: Date;
 }
 
-export type IPaymentCreation = Omit<IPayment, 'id' | 'createdAt' | 'updatedAt'>;
+export type IPaymentCreation = Omit<IPayment, 'id' | 'created_at' | 'updated_at'>;

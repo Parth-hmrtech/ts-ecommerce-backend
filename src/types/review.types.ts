@@ -11,7 +11,7 @@ export interface IReview {
 }
 
 export interface IReviewCreation
-  extends Partial<Omit<IReview, 'id'>> {} // id is optional during creation
+  extends Partial<Omit<IReview, 'id'>> {}
 
 export interface ICreateReviewInput {
   order_id?: string;

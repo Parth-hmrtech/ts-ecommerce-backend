@@ -34,7 +34,7 @@ const createReviewFromOrderController = async (req: Request, res: Response): Pro
 const getAllSellerReviewsController = async (req: Request, res: Response): Promise<void> => {
   try {
     const reviews = await getSellerReviews({ seller_id: (req as AuthRequest).user.id });
-
+    
     res.status(200).json({
       error: false,
       message: 'Seller reviews fetched successfully!',

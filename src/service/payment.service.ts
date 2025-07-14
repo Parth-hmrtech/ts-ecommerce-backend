@@ -1,21 +1,24 @@
-import Payment from '../models/payment';
-import { IPayment } from '../types/payment.types';
+import payment from '../models/payment';
+import { IPayment, IPaymentCreation } from '../types/payment.types';
 
+// Get all seller payments
 const getSellerPayments = async (sellerId: string): Promise<IPayment[]> => {
-  return await Payment.findAll({ where: { seller_id: sellerId } });
+  return await payment.findAll({ where: { seller_id: sellerId } });
 };
 
+// Get single seller payment by order ID
 const getSellerPaymentByOrderId = async (
   sellerId: string,
   orderId: string
 ): Promise<IPayment | null> => {
-  return await Payment.findOne({ where: { seller_id: sellerId, order_id: orderId } });
+  return await payment.findOne({ where: { seller_id: sellerId, order_id: orderId } });
 };
 
+// Get total earnings for a seller
 const getSellerEarnings = async (
   sellerId: string
 ): Promise<{ total_earnings: number; total_orders: number }> => {
-  const payments = await Payment.findAll({
+  const payments = await payment.findAll({
     where: {
       seller_id: sellerId,
       payment_status: 'success'
@@ -25,7 +28,7 @@ const getSellerEarnings = async (
   let totalEarnings = 0;
 
   for (const pay of payments) {
-    totalEarnings += parseFloat(pay.amount?.toString() || '0');
+    totalEarnings += parseFloat(String(pay.amount ?? 0));
   }
 
   return {
@@ -34,11 +37,12 @@ const getSellerEarnings = async (
   };
 };
 
+// Create a new payment (checkout)
 const checkoutPayment = async (
   buyerId: string,
-  payload: Omit<IPayment, 'id' | 'buyer_id' | 'payment_status' | 'createdAt' | 'updatedAt'>
+  payload: Omit<IPaymentCreation, 'buyer_id' | 'payment_status'>
 ): Promise<IPayment> => {
-  const newPayment = await Payment.create({
+  const newPayment = await payment.create({
     buyer_id: buyerId,
     payment_status: 'pending',
     ...payload
@@ -47,6 +51,7 @@ const checkoutPayment = async (
   return newPayment;
 };
 
+// Update payment status by transaction_id
 const verifyPayment = async ({
   transaction_id,
   status
@@ -54,16 +59,17 @@ const verifyPayment = async ({
   transaction_id: string;
   status: string;
 }): Promise<boolean> => {
-  const [affectedCount] = await Payment.update(
+  const updated = await payment.update(
     { payment_status: status },
     { where: { transaction_id } }
   );
 
-  return affectedCount > 0;
+  return updated[0] > 0;
 };
 
+// Get all payments for a buyer
 const getPaymentStatus = async (buyerId: string): Promise<IPayment[]> => {
-  return await Payment.findAll({
+  return await payment.findAll({
     where: {
       buyer_id: buyerId
     },

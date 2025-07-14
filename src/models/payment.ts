@@ -13,8 +13,8 @@ type IPaymentCreation = Optional<
   | 'payment_status'
   | 'transaction_id'
   | 'paid_at'
-  | 'createdAt'
-  | 'updatedAt'
+  | 'created_at'
+  | 'updated_at'
 >;
 
 class Payment extends Model<IPayment, IPaymentCreation> implements IPayment {
@@ -28,9 +28,8 @@ class Payment extends Model<IPayment, IPaymentCreation> implements IPayment {
   declare transaction_id: string | null;
   declare paid_at: Date | null;
 
-  declare readonly createdAt?: Date;
-  declare readonly updatedAt?: Date;
-  declare readonly deletedAt?: Date | null;
+  declare readonly created_at?: Date;
+  declare readonly updated_at?: Date;
 }
 
 Payment.init(
@@ -73,13 +72,23 @@ Payment.init(
       type: DataTypes.DATE,
       allowNull: true,
     },
+    // 👇 add these explicitly to override default field names
+    created_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
+    updated_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
   },
   {
     sequelize,
-    tableName: 'payments',
     modelName: 'Payment',
+    tableName: 'payments',
     timestamps: true,
-    paranoid: true,
     underscored: true,
   }
 );

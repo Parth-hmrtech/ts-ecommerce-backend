@@ -24,7 +24,7 @@ const createProduct = async ({ seller_id, ...productBody }: ICreateProduct): Pro
     ...productBody,
   });
 
-  return createdProduct.get({ plain: true }) as IProduct;
+  return createdProduct;
 };
 
 const uploadProductImage = async ({ product_id, image_urls, }: ImageUploadInput): Promise<number> => {
@@ -53,7 +53,7 @@ const getProduct = async (user: { id: string }): Promise<IProduct[]> => {
     ],
   });
 
-  return products.map((p) => p.get({ plain: true }) as IProduct);
+  return products;
 };
 
 const updateProduct = async ({ productId, ...updateData }: IUpdateProduct & { productId: string }): Promise<boolean> => {
@@ -91,7 +91,7 @@ const fatchAllProducts = async (): Promise<IProduct[]> => {
 
   });
 
-  return products.map((p) => p.get({ plain: true }) as IProduct);
+  return products;
 };
 
 const fetchProductById = async (id: string): Promise<IProduct | null> => {
@@ -114,7 +114,7 @@ const fetchProductById = async (id: string): Promise<IProduct | null> => {
 
   });
 
-  return product ? (product.get({ plain: true }) as IProduct) : null;
+  return product;
 };
 
 
@@ -125,7 +125,7 @@ const createWishlist = async ({ buyer_id, product_id, }: IWishlistCreate): Promi
     defaults: { buyer_id, product_id },
   });
 
-  return wishlistItem.get({ plain: true }) as IWishlist;
+  return wishlistItem;
 };
 
 const getWishlist = async (userId: string): Promise<IWishlist[]> => {
@@ -134,7 +134,7 @@ const getWishlist = async (userId: string): Promise<IWishlist[]> => {
     where: { buyer_id: userId },
   });
 
-  return items.map((w) => w.get({ plain: true }) as IWishlist);
+  return items;
 };
 
 const deleteWishlist = async (productId: string): Promise<boolean> => {
