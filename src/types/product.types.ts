@@ -13,41 +13,8 @@ export interface IProduct {
   updatedAt?: Date;
   deletedAt?: Date | null;
 }
+export type ICreateProduct = Partial<Pick<IProduct, 'id' | 'seller_id' | 'category_id' | 'subcategory_id' | 'product_name' | 'description' | 'price' | 'quantity' | 'image_url' | 'is_active' | 'createdAt' | 'updatedAt' | 'deletedAt'>> & Omit<IProduct, 'id' | 'seller_id' | 'category_id' | 'subcategory_id' | 'product_name' | 'description' | 'price' | 'quantity' | 'image_url' | 'is_active' | 'createdAt' | 'updatedAt' | 'deletedAt'>;
 
-export type ICreateProduct = Partial<
-  Pick<
-    IProduct,
-    | 'id'
-    | 'seller_id'
-    | 'category_id'
-    | 'subcategory_id'
-    | 'product_name'
-    | 'description'
-    | 'price'
-    | 'quantity'
-    | 'image_url'
-    | 'is_active'
-    | 'createdAt'
-    | 'updatedAt'
-    | 'deletedAt'
-  >
-> &
-  Omit<
-    IProduct,
-    | 'id'
-    | 'seller_id'
-    | 'category_id'
-    | 'subcategory_id'
-    | 'product_name'
-    | 'description'
-    | 'price'
-    | 'quantity'
-    | 'image_url'
-    | 'is_active'
-    | 'createdAt'
-    | 'updatedAt'
-    | 'deletedAt'
-  >;
 
 export interface IUpdateProduct {
   id: string;
