@@ -83,6 +83,9 @@ const forgotUserPassword = async (
   role: 'buyer' | 'seller'
 ): Promise<User | null> => {
   try {
+    console.log(email);
+    console.log(role);
+    
     const user = await User.findOne({ where: { email, role } });
 
     if (!user) {
