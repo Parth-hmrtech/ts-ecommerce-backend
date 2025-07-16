@@ -1,13 +1,13 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../config/dbConnect';
 import {
-  CategoryAttributes,
-  CategoryCreationAttributes,
+  ICategory,
+  ICategoryCreate,
 } from '../types/category.types';
 
 class Category
-  extends Model<CategoryAttributes, CategoryCreationAttributes>
-  implements CategoryAttributes
+  extends Model<ICategory, ICategoryCreate>
+  implements ICategory
 {
   declare id: string;
   declare seller_id: string;
@@ -44,9 +44,9 @@ Category.init(
     sequelize,
     tableName: 'categories',
     modelName: 'Category',
-    timestamps: true,
-    paranoid: true,
-    underscored: true,
+    timestamps: true,     
+    paranoid: true,       
+    underscored: true,    
   }
 );
 

@@ -8,13 +8,9 @@ export interface ICategory {
   deletedAt?: Date | null;
 }
 
-export type CategoryAttributes = ICategory;
-
-export type CategoryCreationAttributes = Partial<
+export type ICategoryCreate = Partial<
   Pick<ICategory, 'id' | 'is_active' | 'createdAt' | 'updatedAt' | 'deletedAt'>
-> & Omit<ICategory, 'id' | 'is_active' | 'createdAt' | 'updatedAt' | 'deletedAt'>;
-
-export interface ICategoryCreate extends CategoryCreationAttributes {}
+> & Omit<ICategory, 'id' | 'is_active' | 'createdAt' | 'updatedAt' | 'deletedAt' | 'category_name'>;
 
 export interface ICategoryUpdate {
   id: string;
