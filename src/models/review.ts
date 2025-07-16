@@ -65,7 +65,7 @@ Review.init(
     sequelize,
     modelName: 'Review',
     tableName: 'reviews',
-    timestamps: false, // ⛔️ disables Sequelize automatic createdAt/updatedAt
+    timestamps: false,
   }
 );
 
