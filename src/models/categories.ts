@@ -44,9 +44,9 @@ Category.init(
     sequelize,
     tableName: 'categories',
     modelName: 'Category',
-    timestamps: true,     
-    paranoid: true,       
-    underscored: true,    
+    timestamps: true,
+    paranoid: true,
+    underscored: true,
   }
 );
 

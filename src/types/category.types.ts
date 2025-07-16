@@ -7,16 +7,13 @@ export interface ICategory {
   updatedAt?: Date;
   deletedAt?: Date | null;
 }
-
-export type ICategoryCreate = Partial<
-  Pick<ICategory, 'id' | 'is_active' | 'createdAt' | 'updatedAt' | 'deletedAt'>
-> & Omit<ICategory, 'id' | 'is_active' | 'createdAt' | 'updatedAt' | 'deletedAt' | 'category_name'>;
-
+export type ICategoryCreate = Pick<ICategory, 'seller_id' | 'category_name'> &
+  Partial<Pick<ICategory, 'is_active'>>;
+  
 export interface ICategoryUpdate {
   id: string;
   category_name: string;
 }
-
 export interface ICategoryDelete {
   id: string;
 }

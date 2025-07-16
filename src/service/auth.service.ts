@@ -2,10 +2,7 @@ import jwt, { Secret, SignOptions } from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
 import User from '../models/user';
-import {
-  IUser,
-  ICreateUser,
-} from '../types/user.types';
+import { IUser, ICreateUser } from '../types/user.types';
 
 dotenv.config({ path: '../.env' });
 
@@ -29,7 +26,6 @@ interface JwtPayload {
 }
 
 const createUser = async (userBody: ICreateUser): Promise<User> => {
-
   const { email, role } = userBody;
 
   if (!email || !role) {
@@ -45,13 +41,24 @@ const createUser = async (userBody: ICreateUser): Promise<User> => {
   return await User.create(userBody);
 };
 
-const loginUser = async ({ email, password, role }: LoginUserInput): Promise<{ token: string; user: Omit<IUser, 'password_hash'> }> => {
-
+const loginUser = async ({
+  email,
+  password,
+  role,
+}: LoginUserInput): Promise<{ token: string; user: Omit<IUser, 'password_hash'> }> => {
   const user = await User.unscoped().findOne({
     where: { email, role, is_active: true },
   });
 
-  if (!user || !(await user.validPassword(password))) {
+  if (!user) {
+    throw new Error('Invalid email, password, or role');
+  }
+
+  const isPasswordValid = typeof user.validPassword === 'function'
+    ? await user.validPassword(password)
+    : await bcrypt.compare(password, user.password_hash);
+
+  if (!isPasswordValid) {
     throw new Error('Invalid email, password, or role');
   }
 
@@ -70,21 +77,20 @@ const loginUser = async ({ email, password, role }: LoginUserInput): Promise<{ t
   return { token, user: safeUser };
 };
 
-const forgotUserPassword = async (email: string, newPassword: string, role: 'buyer' | 'seller'): Promise<User | null> => {
-
+const forgotUserPassword = async (
+  email: string,
+  newPassword: string,
+  role: 'buyer' | 'seller'
+): Promise<User | null> => {
   try {
-
     const user = await User.findOne({ where: { email, role } });
 
     if (!user) {
-      console.log(`User not found with email: ${email} and role: ${role}`);
       return null;
     }
 
     user.password_hash = await bcrypt.hash(newPassword, 10);
     await user.save();
-
-    console.log(`Password updated for user ID: ${user.id}`);
     return user;
   } catch (error) {
     console.error('Failed to reset password:', error);
@@ -93,7 +99,6 @@ const forgotUserPassword = async (email: string, newPassword: string, role: 'buy
 };
 
 const isValidUser = async ({ id }: { id: string }): Promise<Omit<IUser, 'password_hash'> | null> => {
-
   if (!id) return null;
 
   const user = await User.findOne({
