@@ -1,8 +1,8 @@
 import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/dbConnect';
-import Category from './categories';
-import SubCategory from './subCategories';
-import { IProduct, ICreateProduct } from '../types/product.types';
+import sequelize from '@/config/dbConnect';
+import Category from '@/models/categories';
+import SubCategory from '@/models/subCategories';
+import { IProduct, ICreateProduct } from '@/types/product.types';
 
 interface IProductCreation extends Optional<IProduct, keyof ICreateProduct> {}
 

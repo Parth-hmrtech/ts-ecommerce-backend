@@ -1,19 +1,19 @@
-import Product from '../models/products';
-import Category from '../models/categories';
-import SubCategory from '../models/subCategories';
-import Wishlist from '../models/wishlist';
+import Product from '@/models/products';
+import Category from '@/models/categories';
+import SubCategory from '@/models/subCategories';
+import Wishlist from '@/models/wishlist';
 
 import {
   ICreateProduct,
   IUpdateProduct,
   IProduct,
   ImageUploadInput,
-} from '../types/product.types';
+} from '@/types/product.types';
 
 import {
   IWishlist,
   IWishlistCreate,
-} from '../types/wishlist.types';
+} from '@/types/wishlist.types';
 
 
 

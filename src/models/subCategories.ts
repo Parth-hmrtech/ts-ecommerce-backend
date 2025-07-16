@@ -1,35 +1,20 @@
-import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/dbConnect';
-
-interface SubCategoryAttributes {
-  id: string;
-  seller_id: string;
-  category_id: string;
-  sub_category_name: string;
-  is_active: boolean;
-  createdAt?: Date;
-  updatedAt?: Date;
-  deletedAt?: Date | null;
-}
-
-interface SubCategoryCreationAttributes
-  extends Optional<
-    SubCategoryAttributes,
-    'id' | 'is_active' | 'createdAt' | 'updatedAt' | 'deletedAt'
-  > {}
+import { DataTypes, Model } from 'sequelize';
+import sequelize from '@/config/dbConnect';
+import { ISubCategory, ISubCategoryCreate } from '@/types/subCategory.types';
 
 class SubCategory
-  extends Model<SubCategoryAttributes, SubCategoryCreationAttributes>
-  implements SubCategoryAttributes {
+  extends Model<ISubCategory, ISubCategoryCreate>
+  implements ISubCategory
+{
   declare id: string;
   declare seller_id: string;
   declare category_id: string;
   declare sub_category_name: string;
   declare is_active: boolean;
 
-  declare readonly createdAt: Date;
-  declare readonly updatedAt: Date;
-  declare readonly deletedAt: Date | null;
+  declare readonly createdAt?: Date;
+  declare readonly updatedAt?: Date;
+  declare readonly deletedAt?: Date | null;
 }
 
 SubCategory.init(
@@ -58,6 +43,7 @@ SubCategory.init(
   },
   {
     sequelize,
+    modelName: 'SubCategory',
     tableName: 'sub_categories',
     freezeTableName: true,
     timestamps: true,

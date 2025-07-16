@@ -1,6 +1,6 @@
 import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/dbConnect';
-import { IPayment } from '../types/payment.types';
+import sequelize from '@/config/dbConnect';
+import { IPayment } from '@/types/payment.types';
 
 type IPaymentCreation = Optional<
   IPayment,

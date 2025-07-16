@@ -1,9 +1,9 @@
 import { DataTypes, Model } from 'sequelize';
-import sequelize from '../config/dbConnect';
+import sequelize from '@/config/dbConnect';
 import {
   ICategory,
   ICategoryCreate,
-} from '../types/category.types';
+} from '@/types/category.types';
 
 class Category
   extends Model<ICategory, ICategoryCreate>

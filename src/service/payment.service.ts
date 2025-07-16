@@ -1,5 +1,5 @@
-import payment from '../models/payment';
-import { IPayment, IPaymentCreation } from '../types/payment.types';
+import payment from '@/models/payment';
+import { IPayment, IPaymentCreation } from '@/types/payment.types';
 
 const getSellerPayments = async (sellerId: string): Promise<IPayment[]> => {
   return await payment.findAll({ where: { seller_id: sellerId } });

@@ -5,7 +5,7 @@ import {
   getCart,
   updateCart,
   deleteBuyerCart,
-} from '../service/cart.service';
+} from '@/service/cart.service';
 
 interface IAuthRequest extends Request {
   user: {

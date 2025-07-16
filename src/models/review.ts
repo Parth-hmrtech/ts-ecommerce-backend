@@ -1,7 +1,6 @@
-// src/models/review.ts
 import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/dbConnect';
-import { IReview } from '../types/review.types';
+import sequelize from '@/config/dbConnect';
+import { IReview } from '@/types/review.types';
 
 type ReviewCreationAttributes = Partial<Omit<IReview, 'id'>>;
 

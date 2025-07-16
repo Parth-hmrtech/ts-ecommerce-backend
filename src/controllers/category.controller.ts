@@ -11,7 +11,7 @@ import {
   deleteSubCategory,
   fetchAllSubCategory,
   getSubCategoryByCategoryId
-} from '../service/category.service';
+} from '@/service/category.service';
 
 interface IAuthRequest extends Request {
   user: {

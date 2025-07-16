@@ -1,5 +1,5 @@
 
-import cloudinary from '../config/cloudinaryConfig';
+import cloudinary from '@/config/cloudinaryConfig';
 import fs from 'fs';
 import path from 'path';
 

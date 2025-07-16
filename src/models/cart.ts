@@ -1,6 +1,6 @@
 import { DataTypes, Model } from 'sequelize';
-import sequelize from '../config/dbConnect';
-import { ICart, ICartCreation } from '../types/cart.types';
+import sequelize from '@/config/dbConnect';
+import { ICart, ICartCreation } from '@/types/cart.types';
 
 class Cart extends Model<ICart, ICartCreation> implements ICart {
   declare id: string;

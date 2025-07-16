@@ -1,16 +1,16 @@
-import Category from '../models/categories';
-import SubCategory from '../models/subCategories';
+import Category from '@/models/categories';
+import SubCategory from '@/models/subCategories';
 
 import {
   ICategoryCreate,
   ICategoryUpdate,
-} from '../types/category.types';
+} from '@/types/category.types';
 
 import {
   ISubCategoryCreate,
   ISubCategoryUpdate,
   ISubCategoryDelete,
-} from '../types/subCategory.types';
+} from '@/types/subCategory.types';
 
 const createCategory = async ({ seller_id, category_name }: ICategoryCreate): Promise<Category> => {
   return await Category.create({ seller_id, category_name });

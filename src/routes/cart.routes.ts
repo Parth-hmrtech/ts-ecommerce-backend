@@ -1,12 +1,12 @@
 import express from 'express';
-import { userAuthMiddleware } from '../middleware/auth.middleware.ts';
+import { userAuthMiddleware } from '@/middleware/auth.middleware.ts';
 import {
     createCartController,
     getCartController,
     updateCartController,
     deleteCartController,
     deleteBuyerCartController
-} from '../controllers/cart.controller.ts';
+} from '@/controllers/cart.controller.ts';
 
 const router = express.Router();
 

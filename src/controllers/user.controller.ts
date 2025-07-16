@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { findUser, updateUser, resetUserPassword } from '../service/user.service';
-import { uploadFile } from '../utils/uploadImage';
+import { uploadFile } from '@/utils/uploadImage';
 
 interface IAuthRequest extends Request {
   user?: {

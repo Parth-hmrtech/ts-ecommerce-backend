@@ -1,10 +1,10 @@
-import Cart from '../models/cart';
+import Cart from '@/models/cart';
 import {
   ICart,
   ICreateCartInput,
   IGetCartInput,
   IUpdateCartInput,
-} from '../types/cart.types';
+} from '@/types/cart.types';
 
 const createCart = async ({ buyer_id, product_id, quantity }: ICreateCartInput): Promise<ICart> => {
   const cartItem = await Cart.create({

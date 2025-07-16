@@ -5,8 +5,8 @@ import {
   loginUserController,
   logoutUserController,
   forgotPasswordController,
-} from '../controllers/auth.controller'; 
-import { userAuthMiddleware } from '../middleware/auth.middleware';
+} from '@/controllers/auth.controller'; 
+import { userAuthMiddleware } from '@/middleware/auth.middleware';
 
 const router = express.Router();
 const upload = multer({ dest: 'src/uploads/' });

@@ -6,8 +6,8 @@ import {
     checkoutPaymentController,
     verifyPaymentController,
     getBuyerPaymentsController
-} from '../controllers/payment.controller.ts';
-import { userAuthMiddleware } from '../middleware/auth.middleware.ts';
+} from '@/controllers/payment.controller.ts';
+import { userAuthMiddleware } from '@/middleware/auth.middleware.ts';
 
 const router = express.Router();
 

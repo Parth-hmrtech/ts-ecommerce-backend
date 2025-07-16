@@ -8,9 +8,9 @@ import {
     getBuyerOrderByIdController,
     cancelBuyerOrderController,
     updateBuyerOrderAddressController,
-} from '../controllers/order.controller.ts';
+} from '@/controllers/order.controller.ts';
 
-import { userAuthMiddleware } from '../middleware/auth.middleware.ts';
+import { userAuthMiddleware } from '@/middleware/auth.middleware.ts';
 
 const router = express.Router();
 

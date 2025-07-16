@@ -6,7 +6,7 @@ import {
   deleteReviewByBuyer,
   deleteReviewBySeller,
   updateReviewByBuyer,
-} from '../service/review.service';
+} from '@/service/review.service';
 
 interface IAuthRequest extends Request {
   user: {

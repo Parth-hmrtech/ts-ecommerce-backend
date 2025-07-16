@@ -1,8 +1,8 @@
 import jwt, { Secret, SignOptions } from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
-import User from '../models/user';
-import { IUser, ICreateUser } from '../types/user.types';
+import User from '@/models/user';
+import { IUser, ICreateUser } from '@/types/user.types';
 
 dotenv.config({ path: '../.env' });
 

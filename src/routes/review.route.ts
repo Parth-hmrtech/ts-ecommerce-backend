@@ -1,5 +1,5 @@
 import express from 'express';
-import { userAuthMiddleware } from '../middleware/auth.middleware.ts';
+import { userAuthMiddleware } from '@/middleware/auth.middleware.ts';
 import {
   createReviewFromOrderController,
   getAllSellerReviewsController,
@@ -7,7 +7,7 @@ import {
   deleteOwnReviewController,
   deleteSellerReviewController,
   updateOwnReviewController
-} from '../controllers/review.controller.ts';
+} from '@/controllers/review.controller.ts';
 
 const router = express.Router();
 

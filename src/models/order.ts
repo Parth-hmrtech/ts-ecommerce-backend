@@ -1,8 +1,8 @@
 
 import { DataTypes, Model } from 'sequelize';
-import sequelize from '../config/dbConnect';
-import orderItems from './orderItem';
-import { IOrder, ICreateOrder } from '../types/order.types';
+import sequelize from '@/config/dbConnect';
+import orderItems from '@/models/orderItem';
+import { IOrder, ICreateOrder } from '@/types/order.types';
 
 class Order extends Model<IOrder, ICreateOrder> implements IOrder {
   declare id: string;

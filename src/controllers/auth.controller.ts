@@ -3,13 +3,13 @@ import {
   createUser,
   loginUser,
   forgotUserPassword,
-} from '../service/auth.service';
+} from '@/service/auth.service';
 
-import { sendEmail } from '../utils/emailService';
-import { generateRandomPassword } from '../utils/password';
-import { uploadFile } from '../utils/uploadImage';
+import { sendEmail } from '@/utils/emailService';
+import { generateRandomPassword } from '@/utils/password';
+import { uploadFile } from '@/utils/uploadImage';
 import { UniqueConstraintError } from 'sequelize';
-import { ICreateUser } from '../types/user.types';
+import { ICreateUser } from '@/types/user.types';
 
 interface IAuthRequest extends Request {
   file?: Express.Multer.File;

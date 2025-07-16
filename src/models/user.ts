@@ -1,10 +1,10 @@
 import { DataTypes, Model } from 'sequelize';
-import sequelize from '../config/dbConnect';
+import sequelize from '@/config/dbConnect';
 import bcrypt from 'bcrypt';
 import {
   IUser,
   ICreateUser,
-} from '../types/user.types';
+} from '@/types/user.types';
 
 export class User extends Model<IUser, ICreateUser> implements IUser {
   declare id: string;

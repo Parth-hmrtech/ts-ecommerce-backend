@@ -1,5 +1,5 @@
 import express from 'express';
-import { userAuthMiddleware } from '../middleware/auth.middleware.ts';
+import { userAuthMiddleware } from '@/middleware/auth.middleware.ts';
 import {
   createCategoryController,
   getCategoryController,
@@ -12,7 +12,7 @@ import {
   deleteSubCategoryController,
   fetchAllSubCategoryController,
   getSubCategoryByCategoryIdController
-} from '../controllers/category.controller.ts';
+} from '@/controllers/category.controller.ts';
 
 const router = express.Router();
 

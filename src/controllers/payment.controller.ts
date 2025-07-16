@@ -6,8 +6,8 @@ import {
   checkoutPayment,
   verifyPayment,
   getPaymentStatus
-} from '../service/payment.service';
-import { IPayment } from '../types/payment.types';
+} from '@/service/payment.service';
+import { IPayment } from '@/types/payment.types';
 
 interface IAuthRequest extends Request {
   user: {

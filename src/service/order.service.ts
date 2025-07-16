@@ -1,13 +1,13 @@
 import { Transaction } from 'sequelize';
-import order from '../models/order';
-import users from '../models/user';
-import product from '../models/products';
-import sequelize from '../config/dbConnect';
-import order_items from '../models/orderItem';
-import { sendOrderAcceptedEmail } from '../utils/emailOrderService';
+import order from '@/models/order';
+import users from '@/models/user';
+import product from '@/models/products';
+import sequelize from '@/config/dbConnect';
+import order_items from '@/models/orderItem';
+import { sendOrderAcceptedEmail } from '@/utils/emailOrderService';
 
-import { IOrder } from '../types/order.types';
-import { ICreateOrderItem } from '../types/orderItem.types';
+import { IOrder } from '@/types/order.types';
+import { ICreateOrderItem } from '@/types/orderItem.types';
 
 interface ProductInput {
   product_id: string;

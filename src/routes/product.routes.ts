@@ -1,6 +1,6 @@
 import express from 'express';
 import multer from 'multer';
-import { userAuthMiddleware } from '../middleware/auth.middleware';
+import { userAuthMiddleware } from '@/middleware/auth.middleware';
 import {
   createProductController,
   imageProductController,
@@ -12,7 +12,7 @@ import {
   getWishlistController,
   createWishlistController,
   deleteWishlistController,
-} from '../controllers/product.controller';
+} from '@/controllers/product.controller';
 
 const router = express.Router();
 

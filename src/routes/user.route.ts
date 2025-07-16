@@ -5,11 +5,11 @@ import {
     getUserController,
     resetPasswordController,
     updateUserController
-} from '../controllers/user.controller.ts';
-import { userAuthMiddleware } from '../middleware/auth.middleware.ts';
+} from '@/controllers/user.controller.ts';
+import { userAuthMiddleware } from '@/middleware/auth.middleware.ts';
 
 const router = express.Router();
-const upload = multer({ dest: 'src/uploads/' }); // or use custom storage
+const upload = multer({ dest: 'src/uploads/' }); 
 
 
 router.get('/profile', userAuthMiddleware, getUserController);

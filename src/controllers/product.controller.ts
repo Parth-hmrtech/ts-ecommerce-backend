@@ -10,8 +10,8 @@ import {
   deleteWishlist,
   getWishlist,
   fetchProductById
-} from '../service/products.service';
-import { uploadFile } from '../utils/uploadImage';
+} from '@/service/products.service';
+import { uploadFile } from '@/utils/uploadImage';
 
 interface IAuthRequest extends Request {
   user: {

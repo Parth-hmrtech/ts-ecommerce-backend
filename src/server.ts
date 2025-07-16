@@ -1,8 +1,8 @@
 import express, { Request, Response } from 'express';
 import session from 'express-session';
 import dotenv from 'dotenv';
-import sequelize from './config/dbConnect';
-import indexRoutes from './routes/index';
+import sequelize from '@/config/dbConnect';
+import indexRoutes from '@/routes/index';
 import cors from 'cors';
 
 dotenv.config();

@@ -11,7 +11,7 @@ import {
   updateBuyerOrderAddress,
   calculateOrderDetails,
   deleteOrderItem
-} from '../service/order.service';
+} from '@/service/order.service';
 
 interface IAuthRequest extends Request {
   user: {

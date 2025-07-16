@@ -1,5 +1,5 @@
 import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/dbConnect';
+import sequelize from '@/config/dbConnect';
 
 interface WishlistAttributes {
   id: string;

@@ -1,5 +1,5 @@
-import User from '../models/user';
-import { IUser, ICreateUser } from '../types/user.types';
+import User from '@/models/user';
+import { IUser, ICreateUser } from '@/types/user.types';
 import bcrypt from 'bcrypt';
 
 const findUser = async (userId: string): Promise<Omit<IUser, 'password_hash'> | null> => {
