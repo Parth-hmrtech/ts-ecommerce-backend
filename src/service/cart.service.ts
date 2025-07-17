@@ -22,11 +22,22 @@ const getCart = async ({ id }: IGetCartInput): Promise<ICart[]> => {
   });
   return cartItems;
 };
+const updateCart = async ({ cartId, quantity, }: IUpdateCartInput): Promise<{ success: boolean; updatedCart?: Cart }> => {
+  const [updatedCount] = await Cart.update(
+    { quantity },
+    { where: { id: cartId } }
+  );
+  if (updatedCount > 0) {
+    const updatedCart = await Cart.findByPk(cartId);
+    if (updatedCart) {
+      return { success: true, updatedCart };
+    }
+    return { success: true };
+  }
 
-const updateCart = async ({ cartId, quantity }: IUpdateCartInput): Promise<boolean> => {
-  const [updatedCount] = await Cart.update({ quantity }, { where: { id: cartId } });
-  return updatedCount > 0;
+  return { success: false };
 };
+
 
 const deleteCart = async (cartId: string): Promise<number> => {
   const deletedCount = await Cart.destroy({
@@ -35,42 +46,42 @@ const deleteCart = async (cartId: string): Promise<number> => {
   return deletedCount;
 };
 
-const deleteBuyerCart = async (buyerId: string): Promise<{success: boolean; message: string; deletedCount: number;}> => {
-  
+const deleteBuyerCart = async (buyerId: string): Promise<{ success: boolean; message: string; deletedCount: number; }> => {
+
   try {
-  
+
     const deletedCount = await Cart.destroy({
       where: { buyer_id: buyerId },
     });
 
     if (deletedCount > 0) {
-  
+
       return {
         success: true,
         message: 'Buyer cart deleted successfully.',
         deletedCount,
       };
-  
+
     } else {
-  
+
       return {
         success: false,
         message: 'No cart items found for this buyer.',
         deletedCount: 0,
       };
-  
+
     }
-  
+
   } catch (error) {
-  
+
     console.error('Service Error in deleteBuyerCart:', error);
-  
+
     return {
       success: false,
       message: 'Error deleting buyer cart.',
       deletedCount: 0,
     };
-  
+
   }
 };
 
