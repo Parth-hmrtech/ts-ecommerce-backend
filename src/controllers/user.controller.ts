@@ -37,7 +37,6 @@ const updateUserController = async (req: Request, res: Response): Promise<void> 
   try {
     const { user, file } = req as IAuthRequest;
     const userData = { ...req.body };
-
     if (file) {
       const imageUrl = await uploadFile(file.path);
       userData.image_url = imageUrl;
